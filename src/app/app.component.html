@@ -1,0 +1,50 @@
+<mat-checkbox [formControl]="multiple">Multiple</mat-checkbox>
+<mat-checkbox [formControl]="overallSearchEnabled">Enable Overall Search</mat-checkbox>
+<mat-checkbox [formControl]="overallSearchVisible">Overall Search Visible On Open</mat-checkbox>
+<mat-checkbox [formControl]="resetSortOnOpen">Reset Sort On Open</mat-checkbox>
+<mat-checkbox [formControl]="resetFiltersOnOpen">Reset Filters On Open</mat-checkbox>
+<mat-form-field>
+  <input matInput
+         [formControl]="additionalRowsControl"
+         type="number"
+         placeholder="Generate additional rows"/>
+</mat-form-field>
+<mat-form-field>
+  <input matInput
+         [formControl]="customTriggerLabelTemplate"
+         placeholder="Provide custom trigger label template"/>
+</mat-form-field>
+<div>
+  &nbsp;
+  <button (click)="customTriggerLabelTemplate.setValue('')"
+          mat-raised-button
+          color="primary"
+          [innerHTML]="'Reset to default'"></button>
+  &nbsp;
+  <button (click)="customTriggerLabelTemplate.setValue('#${id}. ${name}')"
+          mat-raised-button
+          color="primary"
+          [innerHTML]="'#${id}. ${name}'"></button>
+  &nbsp;
+  <button (click)="customTriggerLabelTemplate.setValue('#${id}. ${name} (${address})')"
+          mat-raised-button
+          color="primary"
+          [innerHTML]="'#${id}. ${name} (${address})'"></button>
+</div>
+
+<div>
+  <ngx-mat-select-table *ngIf="redrawSubject$.value"
+                        [formControl]="control"
+                        style="width: 300px"
+                        placeholder="Select something"
+                        [multiple]="multipleValue"
+                        [panelClass]="'custom-panel-width-600'"
+                        [overallSearchEnabled]="overallSearchEnabled.value"
+                        [overallSearchVisible]="overallSearchVisible.value"
+                        [customTriggerLabelTemplate]="customTriggerLabelTemplate.value"
+                        [resetSortOnOpen]="resetSortOnOpen.value"
+                        [resetFiltersOnOpen]="resetFiltersOnOpen.value"
+                        [dataSource]="dataSource"></ngx-mat-select-table>
+</div>
+<div>* Name field sorting in startsWithIgnoreCase mode</div>
+<div>* Address field sorting in containsIgnoreCase mode</div>

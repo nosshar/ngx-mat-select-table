@@ -1,0 +1,89 @@
+@charset "utf-8";
+
+@import "~@angular/material/theming";
+
+$rowHeight: 56px;
+$selectionCellWidth: 56px;
+
+:host {
+  display: block;
+
+  /** Main MatSelect width (consume all given space) */
+  mat-form-field {
+    width: 100%;
+  }
+
+}
+
+::ng-deep .mat-select-search-panel {
+  overflow-x: auto !important;
+
+  .overall-search-toggle {
+    z-index: 102;
+    position: absolute;
+    left: 13px;
+    top: 17px;
+    cursor: pointer;
+  }
+
+  ngx-mat-select-search {
+    position: absolute;
+    z-index: 101;
+
+    &.hidden {
+      display: none;
+    }
+
+    .mat-select-search-inner {
+      height: $rowHeight;
+
+      .mat-select-search-input {
+        margin-left: 26px;
+      }
+    }
+  }
+
+  table {
+    width: 100%;
+
+    tr {
+      cursor: pointer;
+
+      &.active {
+        background: rgba(0, 0, 0, 0.04);
+      }
+
+      td {
+        @include user-select(none);
+      }
+
+      th ::ng-deep .mat-sort-header-container {
+        height: $rowHeight - 1px;
+
+        mat-form-field .mat-form-field-infix {
+          width: initial;
+        }
+      }
+
+      td, th {
+
+        mat-option {
+          background: transparent !important;
+        }
+
+        &.selection {
+          width: $selectionCellWidth;
+          padding: 0;
+          margin: 0;
+
+          &.hidden {
+            mat-option {
+              visibility: hidden;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
