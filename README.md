@@ -30,22 +30,89 @@ import { NgxMatSelectTableModule } from 'ngx-mat-select-table';
 export class AppModule {}
 ```
 
-Use the `ngx-mat-select-table` component inside a `mat-select` element by placing it inside a `<mat-option>` element:
+Use the `ngx-mat-select-table`:
 ```html
-<mat-form-field>
-  <ngx-mat-select-table [formControl]="control"
-                        placeholder="Select something"
-                        [multiple]="true"
-                        [overallSearchEnabled]="true"
-                        [overallSearchVisible]="true"
-                        [customTriggerLabelTemplate]="''"
-                        [resetSortOnOpen]="true"
-                        [resetFiltersOnOpen]="true"
+<div style="width: 300px">
+  <ngx-mat-select-table *ngIf="redrawSubject$.value"
+                        [formControl]="control"
+                        [matSelectConfigurator]="{
+                          placeholder: 'Select something',
+                          panelClass: 'custom-panel-width-600'
+                        }"
+                        [matSelectSearchConfigurator]="{
+                          placeholderLabel: 'Overall Search',
+                          type: 'text',
+                          noEntriesFoundLabel: 'No entries found',
+                          searching: false,
+                          disableInitialFocus: false,
+                          preventHomeEndKeyPropagation: true,
+                          disableScrollToActiveOnOptionsChanged: true,
+                          clearIcon: 'close'
+                        }"
+                        [multiple]="multipleValue"
+                        [overallSearchEnabled]="overallSearchEnabled.value"
+                        [overallSearchVisible]="overallSearchVisible.value"
+                        [customTriggerLabelTemplate]="customTriggerLabelTemplate.value"
+                        [resetSortOnOpen]="resetSortOnOpen.value"
+                        [resetFiltersOnOpen]="resetFiltersOnOpen.value"
                         [dataSource]="dataSource"></ngx-mat-select-table>
-</mat-form-field>
+</div>
 ```
 See the example in [https://github.com/nosshar/ngx-mat-select-table/blob/master/src/app/app.component.html](https://github.com/nosshar/ngx-mat-select-table/blob/master/src/app/app.component.html)
 and [https://github.com/nosshar/ngx-mat-select-table/blob/master/src/app/app.component.ts](https://github.com/nosshar/ngx-mat-select-table/blob/master/src/app/app.component.ts).
+
+### Inputs
+
+```typescript
+  /** Data Source for the table */
+  @Input() dataSource: MatSelectTableDataSource<MatSelectTableRow>;
+
+  /**
+   * Multiple/Single mode for {@see MatSelect#multiple} to initialize.
+   * NB: switching between modes in runtime is not supported by {@see MatSelect}
+   */
+  @Input() multiple: boolean;
+
+  /** Whether or not overall search mode enabled. See {@see NgxMatSelectTableComponent} */
+  @Input() overallSearchEnabled: boolean;
+
+  /** Default is true */
+  @Input() overallSearchVisible: boolean;
+
+  /** Whether or not should {@see NgxMatSelectTableComponent} be visible on open. Default is true */
+  @Input() resetSortOnOpen: boolean;
+
+  /** Whether or not previous search should be cleared on open. Default is true */
+  @Input() resetFiltersOnOpen: boolean;
+
+  /**
+   * Function to customize the default label
+   */
+  @Input() customTriggerLabelFn: (value: MatSelectTableRow[]) => string;
+
+  /**
+   * Template to customize the default trigger label. Has lesser priority than {@see NgxMatSelectTableComponent#customTriggerLabelFn}.
+   * Substitution is case sensitive.
+   * Example: ${name} ${id} - ${address}
+   */
+  @Input() customTriggerLabelTemplate: string;
+
+  /**
+   * {@link MatSelect} proxy inputs configurator
+   * {@link MatSelect#multiple} gets value from {@link NgxMatSelectTableComponent#multiple}
+   */
+  @Input() matSelectConfigurator: { [key: string]: any };
+
+  /**
+   * {@link MatSelectSearchComponent} proxy inputs configurator
+   * {@link MatSelectSearchComponent#formControl} gets value from {@link NgxMatSelectTableComponent#overallFilterControl}
+   * {@link MatSelectSearchComponent#clearSearchInput} gets value from {@link NgxMatSelectTableComponent#resetFiltersOnOpen}
+   */
+  @Input() matSelectSearchConfigurator: { [key: string]: any };
+```
+
+Configuration object matSelectConfigurator proxied to MatSelect.
+Configuration object matSelectSearchConfigurator proxied to NgxMatSelectSearch.
 
 ### Compatibility
 

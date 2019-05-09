@@ -32,13 +32,24 @@
           [innerHTML]="'#${id}. ${name} (${address})'"></button>
 </div>
 
-<div>
+<div style="width: 300px">
   <ngx-mat-select-table *ngIf="redrawSubject$.value"
                         [formControl]="control"
-                        style="width: 300px"
-                        placeholder="Select something"
+                        [matSelectConfigurator]="{
+                          placeholder: 'Select something',
+                          panelClass: 'custom-panel-width-600'
+                        }"
+                        [matSelectSearchConfigurator]="{
+                          placeholderLabel: 'Overall Search',
+                          type: 'text',
+                          noEntriesFoundLabel: 'No entries found',
+                          searching: false,
+                          disableInitialFocus: false,
+                          preventHomeEndKeyPropagation: true,
+                          disableScrollToActiveOnOptionsChanged: true,
+                          clearIcon: 'close'
+                        }"
                         [multiple]="multipleValue"
-                        [panelClass]="'custom-panel-width-600'"
                         [overallSearchEnabled]="overallSearchEnabled.value"
                         [overallSearchVisible]="overallSearchVisible.value"
                         [customTriggerLabelTemplate]="customTriggerLabelTemplate.value"

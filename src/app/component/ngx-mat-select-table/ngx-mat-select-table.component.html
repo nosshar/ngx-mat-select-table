@@ -1,9 +1,6 @@
 <mat-form-field>
   <mat-select #componentSelect
-              [placeholder]="placeholder"
               [multiple]="multiple"
-              [required]="required"
-              [panelClass]="panelClass"
               disableRipple>
 
     <mat-select-trigger>
@@ -13,16 +10,11 @@
 
     <ngx-mat-select-search *ngIf="overallSearchEnabled"
                            [formControl]="overallFilterControl"
-                           [placeholderLabel]="matSelectSearchPlaceholderLabel"
-                           [type]="matSelectSearchType"
-                           [noEntriesFoundLabel]="matSelectSearchNoEntriesFoundLabel"
                            [clearSearchInput]="resetFiltersOnOpen"
-                           [searching]="matSelectSearchSearching"
-                           [disableInitialFocus]="matSelectSearchDisableInitialFocus"
-                           [preventHomeEndKeyPropagation]="matSelectSearchPreventHomeEndKeyPropagation"
-                           [disableScrollToActiveOnOptionsChanged]="matSelectSearchDisableScrollToActiveOnOptionsChanged"
                            [ngClass]="{hidden: overallSearchVisibleState !== true}">
-      <mat-icon ngxMatSelectSearchClear color="primary">close</mat-icon>
+      <mat-icon *ngIf="matSelectSearchConfigurator?.clearIcon"
+                ngxMatSelectSearchClear
+                color="primary">{{matSelectSearchConfigurator.clearIcon}}</mat-icon>
     </ngx-mat-select-search>
     <mat-icon *ngIf="overallSearchEnabled"
               (click)="toggleOverallSearch()"

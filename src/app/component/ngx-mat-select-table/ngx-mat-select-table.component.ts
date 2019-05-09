@@ -44,31 +44,25 @@ const MAX_SAFE_INTEGER = 9007199254740991;
 })
 export class NgxMatSelectTableComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy, OnChanges {
 
+  /** Data Source for the table */
   @Input() dataSource: MatSelectTableDataSource<MatSelectTableRow>;
 
-  @Input() placeholder: string;
-
+  /**
+   * Multiple/Single mode for {@see MatSelect#multiple} to initialize.
+   * NB: switching between modes in runtime is not supported by {@see MatSelect}
+   */
   @Input() multiple: boolean;
 
-  @Input() required: boolean;
-
+  /** Whether or not overall search mode enabled. See {@see NgxMatSelectTableComponent} */
   @Input() overallSearchEnabled: boolean;
 
-  @Input() panelClass: string;
-
-  /**
-   * Default is true
-   */
+  /** Default is true */
   @Input() overallSearchVisible: boolean;
 
-  /**
-   * Default is true
-   */
+  /** Whether or not should {@see NgxMatSelectTableComponent} be visible on open. Default is true */
   @Input() resetSortOnOpen: boolean;
 
-  /**
-   * Default is true
-   */
+  /** Whether or not previous search should be cleared on open. Default is true */
   @Input() resetFiltersOnOpen: boolean;
 
   /**
@@ -77,23 +71,24 @@ export class NgxMatSelectTableComponent implements ControlValueAccessor, OnInit,
   @Input() customTriggerLabelFn: (value: MatSelectTableRow[]) => string;
 
   /**
-   * Template to customize the default trigger label.
-   * Substitution is  case sensitive.
+   * Template to customize the default trigger label. Has lesser priority than {@see NgxMatSelectTableComponent#customTriggerLabelFn}.
+   * Substitution is case sensitive.
    * Example: ${name} ${id} - ${address}
    */
   @Input() customTriggerLabelTemplate: string;
 
   /**
-   * {@link MatSelectSearchComponent} proxy inputs
+   * {@link MatSelect} proxy inputs configurator
+   * {@link MatSelect#multiple} gets value from {@link NgxMatSelectTableComponent#multiple}
+   */
+  @Input() matSelectConfigurator: { [key: string]: any };
+
+  /**
+   * {@link MatSelectSearchComponent} proxy inputs configurator
+   * {@link MatSelectSearchComponent#formControl} gets value from {@link NgxMatSelectTableComponent#overallFilterControl}
    * {@link MatSelectSearchComponent#clearSearchInput} gets value from {@link NgxMatSelectTableComponent#resetFiltersOnOpen}
    */
-  @Input() matSelectSearchPlaceholderLabel: string;
-  @Input() matSelectSearchType: string;
-  @Input() matSelectSearchNoEntriesFoundLabel: string;
-  @Input() matSelectSearchSearching: boolean;
-  @Input() matSelectSearchDisableInitialFocus: boolean;
-  @Input() matSelectSearchPreventHomeEndKeyPropagation: boolean;
-  @Input() matSelectSearchDisableScrollToActiveOnOptionsChanged: boolean;
+  @Input() matSelectSearchConfigurator: { [key: string]: any };
 
   @ViewChild('componentSelect') private matSelect: MatSelect;
 
@@ -121,11 +116,20 @@ export class NgxMatSelectTableComponent implements ControlValueAccessor, OnInit,
 
   overallSearchVisibleState: boolean;
 
-  private overallFilterControl: FormControl;
+  overallFilterControl: FormControl;
 
   private filterControls: FormGroup;
 
   private completeValueList: any[] = [];
+
+  private controlValueAccessorKeys: string[] = [
+    'formControl',
+    'formControlName',
+    'formGroup',
+    'formGroupName',
+    'formArray',
+    'formArrayName'
+  ];
 
   /** Subject that emits when the component has been destroyed. */
   private _onDestroy = new Subject<void>();
@@ -153,6 +157,9 @@ export class NgxMatSelectTableComponent implements ControlValueAccessor, OnInit,
         if (this.resetSortOnOpen !== false) {
           this.sort.sort({id: '', start: 'asc', disableClear: false});
         }
+        if (this.overallSearchEnabled) {
+          this.proxyMatSelectSearchConfiguration(this.matSelectSearchConfigurator);
+        }
         // ToDo: get rid of this workaround (updates header row [otherwise sort mechanism produces glitches])
         (this.table as any)._headerRowDefChanged = true;
         // Disable sort buttons to prevent sorting change on SPACE key pressed in filter field
@@ -173,6 +180,202 @@ export class NgxMatSelectTableComponent implements ControlValueAccessor, OnInit,
           panelElement.style.maxHeight = `${panelHeight + tableAdditionalHeight}px`;
         }
       });
+  }
+
+  ngAfterViewInit(): void {
+    merge(...[
+      this.sort.sortChange,
+      this.filterControls.valueChanges,
+      this.overallFilterControl.valueChanges
+    ])
+      .pipe(takeUntil(this._onDestroy), debounceTime(100))
+      .subscribe(() => {
+        const dataClone: MatSelectTableRow[] = [...this.dataSource.data];
+
+        // Apply filtering
+        if (this.overallSearchEnabled && this.overallSearchVisibleState) {
+          this.applyOverallFilter(dataClone);
+        } else {
+          this.applyColumnLevelFilters(dataClone);
+        }
+
+        // Apply sorting
+        this.tableDataSource = !this.sort.direction ? dataClone : this.sortData(dataClone, this.sort);
+
+        this.cd.detectChanges();
+      });
+
+    // Manually sort data for this.matSelect.options (QueryList<MatOption>) and notify matSelect.options of changes
+    // It's important to keep this.matSelect.options order synchronized with data in the table
+    //     because this.matSelect.options (QueryList<MatOption>) doesn't update it's state after table data is changed
+    this.matOptions.changes.subscribe(() => {
+      const options: { [key: string]: MatOption } = {};
+      this.matOptions.toArray()
+        .filter(option => !isNullOrUndefined(option))
+        .forEach(option => options[`${option.value}`] = option);
+      this.matSelect.options.reset(this.tableDataSource
+        .filter(row => !isNullOrUndefined(options[`${row.id}`]))
+        .map(row => options[`${row.id}`]));
+      this.matSelect.options.notifyOnChanges();
+    });
+
+    if (!isNullOrUndefined(this.matSelect._keyManager)) {
+      // Subscribe on KeyManager changes to highlight the table rows accordingly
+      this.matSelect._keyManager.change
+        .pipe(takeUntil(this._onDestroy))
+        .subscribe(activeRow => this.tableActiveRow = activeRow);
+    }
+  }
+
+  ngOnDestroy(): void {
+    this._onDestroy.next();
+    this._onDestroy.complete();
+  }
+
+  registerOnChange(fn: (value: any) => void): void {
+    const proxyFn: (value: any) => void = (value: any) => {
+      // ToDo: refactor - comparison mechanism isn't optimized. filteredOutRows is a map but completeValueList is an array
+      if (this.multiple === true) {
+        for (let i = this.completeValueList.length - 1; i >= 0; i--) {
+          if (this.filteredOutRows[`${this.completeValueList[i]}`] === undefined && value.indexOf(this.completeValueList[i]) === -1) {
+            this.completeValueList.splice(i, 1);
+          }
+        }
+        value
+          .filter(choice => this.completeValueList.indexOf(choice) === -1)
+          .forEach(choice => this.completeValueList.push(choice));
+        this.matSelect.value = this.completeValueList;
+        fn(this.completeValueList);
+        this.completeRowList.splice(0);
+        this.dataSource.data
+          .filter(row => this.completeValueList.indexOf(row.id) !== -1)
+          .forEach(row => this.completeRowList.push(row));
+      } else {
+        fn(value);
+        this.completeRowList.splice(0);
+        this.dataSource.data
+          .filter(row => row.id === value)
+          .forEach(row => this.completeRowList.push(row));
+      }
+    };
+    this.matSelect.registerOnChange(proxyFn);
+  }
+
+  registerOnTouched(fn: () => {}): void {
+    this.matSelect.registerOnTouched(fn);
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.matSelect.setDisabledState(isDisabled);
+  }
+
+  writeValue(value: any): void {
+    this.matSelect.writeValue(value);
+    if (this.matSelect.value !== value) {
+      this.matSelect.value = value;
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+
+    if (!isNullOrUndefined(changes.resetFiltersOnOpen) && changes.resetFiltersOnOpen.currentValue !== false) {
+      this.resetFilters();
+    }
+
+    // Proxy @Input bindings to MatSelect
+    if (!isNullOrUndefined(changes.matSelectConfigurator)) {
+      const configuration = changes.matSelectConfigurator.currentValue;
+      Object.keys(configuration)
+        .filter(key => !['multiple'].includes(key) && !this.controlValueAccessorKeys.includes(key))
+        .forEach(key => this.matSelect[key] = configuration[key]);
+    }
+
+    if (!isNullOrUndefined(changes.matSelectSearchConfigurator)) {
+      this.proxyMatSelectSearchConfiguration(changes.matSelectSearchConfigurator.currentValue);
+    }
+
+    if (!isNullOrUndefined(changes.dataSource)
+      && !isNullOrUndefined(changes.dataSource.currentValue)
+      && isArray(changes.dataSource.currentValue.data)) {
+      this.tableDataSource = [...changes.dataSource.currentValue.data];
+      this.tableColumns = ['_selection', ...changes.dataSource.currentValue.columns.map(column => column.key)];
+      this.tableColumnsMap.clear();
+      changes.dataSource.currentValue.columns.forEach(column => this.tableColumnsMap.set(column.key, column));
+      this.applyProxyToArray(changes.dataSource.currentValue.data, () => {
+        this._onOptionsChange.next();
+      });
+      this._onOptionsChange.next();
+    }
+  }
+
+  emulateMatOptionClick(event: MouseEvent): void {
+    if (event.composedPath()
+      .filter(et => et instanceof HTMLElement)
+      .some((et: HTMLElement) => et.tagName.toLowerCase() === 'mat-option')) {
+      return;
+    }
+    if (!(event.target instanceof HTMLElement)) {
+      return;
+    }
+    let rowElement = event.target;
+    while (rowElement != null && rowElement instanceof HTMLElement && rowElement.tagName.toLowerCase() !== 'tr') {
+      rowElement = rowElement.parentElement;
+    }
+    if (rowElement === null) {
+      return;
+    }
+    const childOption: HTMLElement = rowElement.querySelector('mat-option');
+    if (!childOption) {
+      return;
+    }
+    childOption.click();
+  }
+
+
+  filterFormControl(key: string): FormControl {
+    if (!this.filterControls.contains(key)) {
+      this.filterControls.registerControl(key, new FormControl(''));
+    }
+    return <FormControl>this.filterControls.get(key);
+  }
+
+  simpleTriggerLabelFn(value: MatSelectTableRow[]): string {
+    return value.map(row => {
+      if (isNullOrUndefined(row)) {
+        return '';
+      }
+      if (isNullOrUndefined(this.customTriggerLabelTemplate)
+        || typeof this.customTriggerLabelTemplate !== 'string'
+        || this.customTriggerLabelTemplate.trim().length === 0) {
+        return `${row.id}`;
+      }
+      let atLeastPartialSubstitution = false;
+      const substitution: string = this.customTriggerLabelTemplate.replace(/[$]{1}[{]{1}([^}]+)[}]{1}?/g, (_, key) =>
+        !isNullOrUndefined(row[key]) && (atLeastPartialSubstitution = true) ? row[key] : '');
+      if (atLeastPartialSubstitution === false) {
+        return `${row.id}`;
+      }
+      return substitution.trim();
+    }).join(', ');
+  }
+
+  toggleOverallSearch(): void {
+    this.overallSearchVisibleState = !this.overallSearchVisibleState;
+    this.resetFilters();
+    if (this.overallSearchVisibleState) {
+      setTimeout(() => this.matSelectSearch._focus());
+    }
+  }
+
+  private proxyMatSelectSearchConfiguration(configuration: { [key: string]: any }): void {
+    if (isNullOrUndefined(this.matSelectSearch)) {
+      return;
+    }
+
+    // Proxy @Input bindings to NgxMatSelectSearch
+    Object.keys(configuration)
+      .filter(key => !['clearSearchInput'].includes(key) && !this.controlValueAccessorKeys.includes(key))
+      .forEach(key => this.matSelectSearch[key] = configuration[key]);
   }
 
   private applyColumnLevelFilters(data: MatSelectTableRow[]): void {
@@ -279,181 +482,6 @@ export class NgxMatSelectTableComponent implements ControlValueAccessor, OnInit,
       if (rowShouldBeFiltered) {
         data.splice(i, 1).forEach(item => this.filteredOutRows[`${item.id}`] = item);
       }
-    }
-  }
-
-  ngAfterViewInit(): void {
-    merge(...[
-      this.sort.sortChange,
-      this.filterControls.valueChanges,
-      this.overallFilterControl.valueChanges
-    ])
-      .pipe(takeUntil(this._onDestroy), debounceTime(100))
-      .subscribe(() => {
-        const dataClone: MatSelectTableRow[] = [...this.dataSource.data];
-
-        // Apply filtering
-        if (this.overallSearchEnabled && this.overallSearchVisibleState) {
-          this.applyOverallFilter(dataClone);
-        } else {
-          this.applyColumnLevelFilters(dataClone);
-        }
-
-        // Apply sorting
-        this.tableDataSource = !this.sort.direction ? dataClone : this.sortData(dataClone, this.sort);
-
-        setTimeout(() => this.matOptions.notifyOnChanges());
-
-        this.cd.detectChanges();
-      });
-
-    // Manually sort data for this.matSelect.options (QueryList<MatOption>) and notify matSelect.options of changes
-    // It's important to keep this.matSelect.options order synchronized with data in the table
-    //     because this.matSelect.options (QueryList<MatOption>) doesn't update it's state after table data is changed
-    this.matOptions.changes.subscribe(() => {
-      const options: { [key: string]: MatOption } = {};
-      this.matOptions.toArray()
-        .filter(option => !isNullOrUndefined(option))
-        .forEach(option => options[`${option.value}`] = option);
-      this.matSelect.options.reset(this.tableDataSource
-        .filter(row => !isNullOrUndefined(options[`${row.id}`]))
-        .map(row => options[`${row.id}`]));
-      this.matSelect.options.notifyOnChanges();
-    });
-
-    if (!isNullOrUndefined(this.matSelect._keyManager)) {
-      // Subscribe on KeyManager changes to highlight the table rows accordingly
-      this.matSelect._keyManager.change
-        .pipe(takeUntil(this._onDestroy))
-        .subscribe(activeRow => this.tableActiveRow = activeRow);
-    }
-  }
-
-  ngOnDestroy(): void {
-    this._onDestroy.next();
-    this._onDestroy.complete();
-  }
-
-  registerOnChange(fn: (value: any) => void): void {
-    const proxyFn: (value: any) => void = (value: any) => {
-      // ToDo: refactor - comparison mechanism isn't optimized. filteredOutRows is a map but completeValueList is an array
-      if (this.multiple === true) {
-        for (let i = this.completeValueList.length - 1; i >= 0; i--) {
-          if (this.filteredOutRows[`${this.completeValueList[i]}`] === undefined && value.indexOf(this.completeValueList[i]) === -1) {
-            this.completeValueList.splice(i, 1);
-          }
-        }
-        value
-          .filter(choice => this.completeValueList.indexOf(choice) === -1)
-          .forEach(choice => this.completeValueList.push(choice));
-        this.matSelect.value = this.completeValueList;
-        fn(this.completeValueList);
-        this.completeRowList.splice(0);
-        this.dataSource.data
-          .filter(row => this.completeValueList.indexOf(row.id) !== -1)
-          .forEach(row => this.completeRowList.push(row));
-      } else {
-        fn(value);
-        this.completeRowList.splice(0);
-        this.dataSource.data
-          .filter(row => row.id === value)
-          .forEach(row => this.completeRowList.push(row));
-      }
-    };
-    this.matSelect.registerOnChange(proxyFn);
-  }
-
-  registerOnTouched(fn: () => {}): void {
-    this.matSelect.registerOnTouched(fn);
-  }
-
-  setDisabledState(isDisabled: boolean): void {
-    this.matSelect.setDisabledState(isDisabled);
-  }
-
-  writeValue(value: any): void {
-    this.matSelect.writeValue(value);
-    if (this.matSelect.value !== value) {
-      this.matSelect.value = value;
-    }
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-
-    if (!isNullOrUndefined(changes.resetFiltersOnOpen) && changes.resetFiltersOnOpen.currentValue !== false) {
-      this.resetFilters();
-    }
-
-    if (!isNullOrUndefined(changes.dataSource)
-      && !isNullOrUndefined(changes.dataSource.currentValue)
-      && isArray(changes.dataSource.currentValue.data)) {
-      this.tableDataSource = [...changes.dataSource.currentValue.data];
-      this.tableColumns = ['_selection', ...changes.dataSource.currentValue.columns.map(column => column.key)];
-      this.tableColumnsMap.clear();
-      changes.dataSource.currentValue.columns.forEach(column => this.tableColumnsMap.set(column.key, column));
-      this.applyProxyToArray(changes.dataSource.currentValue.data, () => {
-        this._onOptionsChange.next();
-      });
-      this._onOptionsChange.next();
-    }
-  }
-
-  emulateMatOptionClick(event: MouseEvent): void {
-    if (event.composedPath()
-      .filter(et => et instanceof HTMLElement)
-      .some((et: HTMLElement) => et.tagName.toLowerCase() === 'mat-option')) {
-      return;
-    }
-    if (!(event.target instanceof HTMLElement)) {
-      return;
-    }
-    let rowElement = event.target;
-    while (rowElement != null && rowElement instanceof HTMLElement && rowElement.tagName.toLowerCase() !== 'tr') {
-      rowElement = rowElement.parentElement;
-    }
-    if (rowElement === null) {
-      return;
-    }
-    const childOption: HTMLElement = rowElement.querySelector('mat-option');
-    if (!childOption) {
-      return;
-    }
-    childOption.click();
-  }
-
-
-  filterFormControl(key: string): FormControl {
-    if (!this.filterControls.contains(key)) {
-      this.filterControls.registerControl(key, new FormControl(''));
-    }
-    return <FormControl>this.filterControls.get(key);
-  }
-
-  simpleTriggerLabelFn(value: MatSelectTableRow[]): string {
-    return value.map(row => {
-      if (isNullOrUndefined(row)) {
-        return '';
-      }
-      if (isNullOrUndefined(this.customTriggerLabelTemplate)
-        || typeof this.customTriggerLabelTemplate !== 'string'
-        || this.customTriggerLabelTemplate.trim().length === 0) {
-        return `${row.id}`;
-      }
-      let atLeastPartialSubstitution = false;
-      const substitution: string = this.customTriggerLabelTemplate.replace(/[$]{1}[{]{1}([^}]+)[}]{1}?/g, (_, key) =>
-        !isNullOrUndefined(row[key]) && (atLeastPartialSubstitution = true) ? row[key] : '');
-      if (atLeastPartialSubstitution === false) {
-        return `${row.id}`;
-      }
-      return substitution.trim();
-    }).join(', ');
-  }
-
-  toggleOverallSearch(): void {
-    this.overallSearchVisibleState = !this.overallSearchVisibleState;
-    this.resetFilters();
-    if (this.overallSearchVisibleState) {
-      setTimeout(() => this.matSelectSearch._focus());
     }
   }
 
