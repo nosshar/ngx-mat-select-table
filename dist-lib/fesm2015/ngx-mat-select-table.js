@@ -276,12 +276,21 @@ class MatSelectTableComponent {
              * @param {?} key
              * @return {?}
              */
-            key => !['multiple'].includes(key) && !this.controlValueAccessorKeys.includes(key)))
+            key => !['multiple', 'panelClass'].includes(key) && !this.controlValueAccessorKeys.includes(key)))
                 .forEach((/**
              * @param {?} key
              * @return {?}
              */
             key => this.matSelect[key] = configuration[key]));
+            /** @type {?} */
+            const panelClass = [];
+            if (!isNullOrUndefined(configuration.panelClass)) {
+                panelClass.push(configuration.panelClass);
+            }
+            if (this.overallSearchEnabled) {
+                panelClass.push('mat-select-search-panel');
+            }
+            this.matSelect.panelClass = panelClass;
         }
         if (!isNullOrUndefined(changes.matSelectSearchConfigurator)) {
             this.proxyMatSelectSearchConfiguration(changes.matSelectSearchConfigurator.currentValue);
@@ -728,7 +737,7 @@ MatSelectTableComponent.decorators = [
                         multi: true
                     }
                 ],
-                styles: [":host{display:block}:host mat-form-field{width:100%}::ng-deep .mat-select-search-panel{overflow-x:auto!important}::ng-deep .mat-select-search-panel .overall-search-toggle{z-index:102;position:absolute;left:13px;top:17px;cursor:pointer}::ng-deep .mat-select-search-panel ngx-mat-select-search{position:absolute;z-index:101}::ng-deep .mat-select-search-panel ngx-mat-select-search.hidden{display:none}::ng-deep .mat-select-search-panel ngx-mat-select-search .mat-select-search-inner{height:56px}::ng-deep .mat-select-search-panel ngx-mat-select-search .mat-select-search-inner .mat-select-search-input{margin-left:26px}::ng-deep .mat-select-search-panel table{width:100%}::ng-deep .mat-select-search-panel table tr{cursor:pointer}::ng-deep .mat-select-search-panel table tr.active{background:rgba(0,0,0,.04)}::ng-deep .mat-select-search-panel table tr td{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}::ng-deep .mat-select-search-panel table tr th ::ng-deep .mat-sort-header-container{height:55px}::ng-deep .mat-select-search-panel table tr th ::ng-deep .mat-sort-header-container mat-form-field .mat-form-field-infix{width:initial}::ng-deep .mat-select-search-panel table tr td mat-option,::ng-deep .mat-select-search-panel table tr th mat-option{background:0 0!important}::ng-deep .mat-select-search-panel table tr td.selection,::ng-deep .mat-select-search-panel table tr th.selection{width:56px;padding:0;margin:0}::ng-deep .mat-select-search-panel table tr td.selection.hidden mat-option,::ng-deep .mat-select-search-panel table tr th.selection.hidden mat-option{visibility:hidden}"]
+                styles: [":host{display:block}:host mat-form-field{width:100%}::ng-deep .mat-select-panel{overflow-x:auto!important}::ng-deep .mat-select-panel .overall-search-toggle{z-index:102;position:absolute;left:13px;top:17px;cursor:pointer}::ng-deep .mat-select-panel ngx-mat-select-search{position:absolute;z-index:101}::ng-deep .mat-select-panel ngx-mat-select-search.hidden{display:none}::ng-deep .mat-select-panel ngx-mat-select-search .mat-select-search-inner{height:56px}::ng-deep .mat-select-panel ngx-mat-select-search .mat-select-search-inner .mat-select-search-input{margin-left:26px}::ng-deep .mat-select-panel table{width:100%}::ng-deep .mat-select-panel table tr{cursor:pointer}::ng-deep .mat-select-panel table tr.active{background:rgba(0,0,0,.04)}::ng-deep .mat-select-panel table tr td{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}::ng-deep .mat-select-panel table tr th ::ng-deep .mat-sort-header-container{height:55px}::ng-deep .mat-select-panel table tr th ::ng-deep .mat-sort-header-container mat-form-field .mat-form-field-infix{width:initial}::ng-deep .mat-select-panel table tr td mat-option,::ng-deep .mat-select-panel table tr th mat-option{background:0 0!important}::ng-deep .mat-select-panel table tr td.selection,::ng-deep .mat-select-panel table tr th.selection{width:56px;padding:0;margin:0}::ng-deep .mat-select-panel table tr td.selection.hidden mat-option,::ng-deep .mat-select-panel table tr th.selection.hidden mat-option{visibility:hidden}"]
             }] }
 ];
 /** @nocollapse */
