@@ -3,7 +3,7 @@
 
 ## What does it do?
 Material Select Table component based on Angular Material ([Angular Material](https://material.angular.io)) library.
-Uses [MatSelect](https://material.angular.io/components/select/overview), [MatTable](https://material.angular.io/components/table/overview).
+Uses [MatSelect](https://material.angular.io/components/select/overview), [MatTable](https://material.angular.io/components/table/overview), [NgxMatSelectSearch](https://github.com/bithost-gmbh/ngx-mat-select-search).
 
 ## Try it
 Demo available [https://angular-7u6xkn.stackblitz.io](https://stackblitz.com/edit/angular-7u6xkn)
