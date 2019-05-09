@@ -23,7 +23,6 @@ import { NgxMatSelectTableModule } from 'ngx-mat-select-table';
   imports: [
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    MatSelectModule,
     MatFormFieldModule,
     NgxMatSelectTableModule
   ],
