@@ -279,6 +279,7 @@ var MatSelectTableComponent = /** @class */ (function () {
      * @return {?}
      */
     function (value) {
+        this.updateCompleteRowList(value);
         this.matSelect.writeValue(value);
         if (this.matSelect.value !== value) {
             this.matSelect.value = value;
@@ -296,6 +297,13 @@ var MatSelectTableComponent = /** @class */ (function () {
         var _this = this;
         if (!isNullOrUndefined(changes.resetFiltersOnOpen) && changes.resetFiltersOnOpen.currentValue !== false) {
             this.resetFilters();
+        }
+        if (!isNullOrUndefined(changes.dataSource)) {
+            this.updateCompleteRowList(this.completeRowList.map((/**
+             * @param {?} row
+             * @return {?}
+             */
+            function (row) { return row.id; })));
         }
         // Proxy @Input bindings to MatSelect
         if (!isNullOrUndefined(changes.matSelectConfigurator)) {
@@ -458,6 +466,40 @@ var MatSelectTableComponent = /** @class */ (function () {
              * @return {?}
              */
             function () { return _this.matSelectSearch._focus(); }));
+        }
+    };
+    /**
+     * @private
+     * @param {?} value
+     * @return {?}
+     */
+    MatSelectTableComponent.prototype.updateCompleteRowList = /**
+     * @private
+     * @param {?} value
+     * @return {?}
+     */
+    function (value) {
+        var _this = this;
+        this.completeRowList.splice(0);
+        if (!isNullOrUndefined(value)) {
+            /** @type {?} */
+            var valueArray = !isArray(value) ? [value] : value;
+            valueArray.forEach((/**
+             * @param {?} item
+             * @return {?}
+             */
+            function (item) {
+                /** @type {?} */
+                var rowFound = _this.dataSource.data.find((/**
+                 * @param {?} row
+                 * @return {?}
+                 */
+                function (row) { return row.id === item; }));
+                if (rowFound === null) {
+                    return;
+                }
+                _this.completeRowList.push(rowFound);
+            }));
         }
     };
     /**

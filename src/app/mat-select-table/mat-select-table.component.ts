@@ -270,6 +270,7 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
   }
 
   writeValue(value: any): void {
+    this.updateCompleteRowList(value);
     this.matSelect.writeValue(value);
     if (this.matSelect.value !== value) {
       this.matSelect.value = value;
@@ -280,6 +281,10 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
 
     if (!isNullOrUndefined(changes.resetFiltersOnOpen) && changes.resetFiltersOnOpen.currentValue !== false) {
       this.resetFilters();
+    }
+
+    if (!isNullOrUndefined(changes.dataSource)) {
+      this.updateCompleteRowList(this.completeRowList.map(row => row.id));
     }
 
     // Proxy @Input bindings to MatSelect
@@ -372,6 +377,20 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
     this.resetFilters();
     if (this.overallSearchVisibleState) {
       setTimeout(() => this.matSelectSearch._focus());
+    }
+  }
+
+  private updateCompleteRowList(value: any[]): void {
+    this.completeRowList.splice(0);
+    if (!isNullOrUndefined(value)) {
+      const valueArray: any[] = !isArray(value) ? [value] : value;
+      valueArray.forEach(item => {
+        const rowFound = this.dataSource.data.find(row => row.id === item);
+        if (rowFound === null) {
+          return;
+        }
+        this.completeRowList.push(rowFound);
+      });
     }
   }
 

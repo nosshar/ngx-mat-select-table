@@ -254,6 +254,7 @@ class MatSelectTableComponent {
      * @return {?}
      */
     writeValue(value) {
+        this.updateCompleteRowList(value);
         this.matSelect.writeValue(value);
         if (this.matSelect.value !== value) {
             this.matSelect.value = value;
@@ -266,6 +267,13 @@ class MatSelectTableComponent {
     ngOnChanges(changes) {
         if (!isNullOrUndefined(changes.resetFiltersOnOpen) && changes.resetFiltersOnOpen.currentValue !== false) {
             this.resetFilters();
+        }
+        if (!isNullOrUndefined(changes.dataSource)) {
+            this.updateCompleteRowList(this.completeRowList.map((/**
+             * @param {?} row
+             * @return {?}
+             */
+            row => row.id)));
         }
         // Proxy @Input bindings to MatSelect
         if (!isNullOrUndefined(changes.matSelectConfigurator)) {
@@ -409,6 +417,34 @@ class MatSelectTableComponent {
              * @return {?}
              */
             () => this.matSelectSearch._focus()));
+        }
+    }
+    /**
+     * @private
+     * @param {?} value
+     * @return {?}
+     */
+    updateCompleteRowList(value) {
+        this.completeRowList.splice(0);
+        if (!isNullOrUndefined(value)) {
+            /** @type {?} */
+            const valueArray = !isArray(value) ? [value] : value;
+            valueArray.forEach((/**
+             * @param {?} item
+             * @return {?}
+             */
+            item => {
+                /** @type {?} */
+                const rowFound = this.dataSource.data.find((/**
+                 * @param {?} row
+                 * @return {?}
+                 */
+                row => row.id === item));
+                if (rowFound === null) {
+                    return;
+                }
+                this.completeRowList.push(rowFound);
+            }));
         }
     }
     /**

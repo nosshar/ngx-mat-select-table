@@ -80,6 +80,7 @@ export declare class MatSelectTableComponent implements ControlValueAccessor, On
     filterFormControl(key: string): FormControl;
     simpleTriggerLabelFn(value: MatSelectTableRow[]): string;
     toggleOverallSearch(): void;
+    private updateCompleteRowList;
     private proxyMatSelectSearchConfiguration;
     private applyColumnLevelFilters;
     private applyOverallFilter;
