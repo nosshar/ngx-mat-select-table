@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {MatSelectTableDataSource} from './component/ngx-mat-select-table/MatSelectTableDataSource';
-import {MatSelectTableRow} from './component/ngx-mat-select-table/MatSelectTableRow';
+import {MatSelectTableDataSource} from './ngx-mat-select-table/MatSelectTableDataSource';
+import {MatSelectTableRow} from './ngx-mat-select-table/MatSelectTableRow';
 import {BehaviorSubject} from 'rxjs';
 
 interface DataRow extends MatSelectTableRow {
