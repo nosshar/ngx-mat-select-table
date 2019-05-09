@@ -4,11 +4,14 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host 0.0.0.0 --port 4200 --configuration=dev",
-    "build": "ng build",
-    "test": "ng test",
+    "start": "ng serve",
+    "build": "ng build --prod",
+    "build.ci": "npm run build -- --progress=false",
+    "test": "ng test --watch=false --code-coverage",
+    "test.ci": "npm run test -- --progress=false --watch=false",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "build-lib": "ng-packagr -p ng-package.json"
   },
   "private": false,
   "dependencies": {
