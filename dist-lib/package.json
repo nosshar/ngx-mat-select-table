@@ -2,17 +2,6 @@
   "name": "ngx-mat-select-table",
   "version": "0.0.1",
   "license": "MIT",
-  "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build --prod",
-    "build.ci": "npm run build -- --progress=false",
-    "test": "ng test --watch=false --code-coverage",
-    "test.ci": "npm run test -- --progress=false --watch=false",
-    "lint": "ng lint",
-    "e2e": "ng e2e",
-    "build-lib": "ng-packagr -p ng-package.json"
-  },
   "private": false,
   "peerDependencies": {
     "@angular/core": "^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0",
@@ -68,7 +57,7 @@
     "webpack": "^4.28.2"
   },
   "description": "[https://github.com/nosshar/ngx-mat-select-table](https://github.com/nosshar/ngx-mat-select-table)",
-  "main": "karma.conf.js",
+  "main": "bundles/ngx-mat-select-table.umd.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nosshar/ngx-mat-select-table.git"
@@ -83,5 +72,17 @@
   "bugs": {
     "url": "https://github.com/nosshar/ngx-mat-select-table/issues"
   },
-  "homepage": "https://github.com/nosshar/ngx-mat-select-table#readme"
+  "homepage": "https://github.com/nosshar/ngx-mat-select-table#readme",
+  "module": "fesm5/ngx-mat-select-table.js",
+  "es2015": "fesm2015/ngx-mat-select-table.js",
+  "esm5": "esm5/ngx-mat-select-table.js",
+  "esm2015": "esm2015/ngx-mat-select-table.js",
+  "fesm5": "fesm5/ngx-mat-select-table.js",
+  "fesm2015": "fesm2015/ngx-mat-select-table.js",
+  "typings": "ngx-mat-select-table.d.ts",
+  "metadata": "ngx-mat-select-table.metadata.json",
+  "sideEffects": false,
+  "dependencies": {
+    "tslib": "^1.9.0"
+  }
 }
