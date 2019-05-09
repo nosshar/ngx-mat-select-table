@@ -77,7 +77,7 @@ export class AppComponent implements OnInit, OnDestroy {
   multipleValue: boolean = this.multiple.value;
 
   constructor() {
-    this.control = new FormControl([1, 3]);
+    this.control = new FormControl(null);
   }
 
   ngOnInit(): void {
