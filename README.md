@@ -98,15 +98,15 @@ and [https://github.com/nosshar/ngx-mat-select-table/blob/master/src/app/app.com
   @Input() customTriggerLabelTemplate: string;
 
   /**
-   * {@link MatSelect} proxy inputs configurator
-   * {@link MatSelect#multiple} gets value from {@link NgxMatSelectTableComponent#multiple}
+   * {@see MatSelect} proxy inputs configurator
+   * {@see MatSelect#multiple} gets value from {@see NgxMatSelectTableComponent#multiple}
    */
   @Input() matSelectConfigurator: { [key: string]: any };
 
   /**
-   * {@link MatSelectSearchComponent} proxy inputs configurator
-   * {@link MatSelectSearchComponent#formControl} gets value from {@link NgxMatSelectTableComponent#overallFilterControl}
-   * {@link MatSelectSearchComponent#clearSearchInput} gets value from {@link NgxMatSelectTableComponent#resetFiltersOnOpen}
+   * {@see MatSelectSearchComponent} proxy inputs configurator
+   * {@see MatSelectSearchComponent#formControl} gets value from {@see NgxMatSelectTableComponent#overallFilterControl}
+   * {@see MatSelectSearchComponent#clearSearchInput} gets value from {@see NgxMatSelectTableComponent#resetFiltersOnOpen}
    */
   @Input() matSelectSearchConfigurator: { [key: string]: any };
 ```
