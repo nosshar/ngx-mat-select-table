@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 
 import {CommonModule} from '@angular/common';
-import {NgxMatSelectTableComponent} from './ngx-mat-select-table.component';
+import {MatSelectTableComponent} from './mat-select-table.component';
 import {NgxMatSelectSearchModule} from 'ngx-mat-select-search';
 import {
   MatCommonModule,
@@ -16,7 +16,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
-    NgxMatSelectTableComponent
+    MatSelectTableComponent
   ],
   imports: [
     CommonModule,
@@ -32,8 +32,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     NgxMatSelectSearchModule
   ],
   providers: [],
-  bootstrap: [NgxMatSelectTableComponent],
-  exports: [NgxMatSelectTableComponent]
+  bootstrap: [MatSelectTableComponent],
+  exports: [MatSelectTableComponent]
 })
 export class NgxMatSelectTableModule {
 }

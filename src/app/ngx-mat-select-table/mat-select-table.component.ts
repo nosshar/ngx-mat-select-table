@@ -30,19 +30,19 @@ const MAX_SAFE_INTEGER = 9007199254740991;
 
 @Component({
   selector: 'ngx-mat-select-table',
-  templateUrl: './ngx-mat-select-table.component.html',
-  styleUrls: ['./ngx-mat-select-table.component.scss'],
+  templateUrl: './mat-select-table.component.html',
+  styleUrls: ['./mat-select-table.component.scss'],
   exportAs: 'ngx-mat-select-table',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => NgxMatSelectTableComponent),
+      useExisting: forwardRef(() => MatSelectTableComponent),
       multi: true
     }
   ]
 })
-export class NgxMatSelectTableComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy, OnChanges {
+export class MatSelectTableComponent implements ControlValueAccessor, OnInit, AfterViewInit, OnDestroy, OnChanges {
 
   /** Data Source for the table */
   @Input() dataSource: MatSelectTableDataSource<MatSelectTableRow>;
@@ -53,13 +53,13 @@ export class NgxMatSelectTableComponent implements ControlValueAccessor, OnInit,
    */
   @Input() multiple: boolean;
 
-  /** Whether or not overall search mode enabled. See {@see NgxMatSelectTableComponent} */
+  /** Whether or not overall search mode enabled. See {@see MatSelectTableComponent} */
   @Input() overallSearchEnabled: boolean;
 
   /** Default is true */
   @Input() overallSearchVisible: boolean;
 
-  /** Whether or not should {@see NgxMatSelectTableComponent} be visible on open. Default is true */
+  /** Whether or not should {@see MatSelectTableComponent} be visible on open. Default is true */
   @Input() resetSortOnOpen: boolean;
 
   /** Whether or not previous search should be cleared on open. Default is true */
@@ -71,7 +71,7 @@ export class NgxMatSelectTableComponent implements ControlValueAccessor, OnInit,
   @Input() customTriggerLabelFn: (value: MatSelectTableRow[]) => string;
 
   /**
-   * Template to customize the default trigger label. Has lesser priority than {@see NgxMatSelectTableComponent#customTriggerLabelFn}.
+   * Template to customize the default trigger label. Has lesser priority than {@see MatSelectTableComponent#customTriggerLabelFn}.
    * Substitution is case sensitive.
    * Example: ${name} ${id} - ${address}
    */
@@ -79,14 +79,14 @@ export class NgxMatSelectTableComponent implements ControlValueAccessor, OnInit,
 
   /**
    * {@see MatSelect} proxy inputs configurator
-   * {@see MatSelect#multiple} gets value from {@see NgxMatSelectTableComponent#multiple}
+   * {@see MatSelect#multiple} gets value from {@see MatSelectTableComponent#multiple}
    */
   @Input() matSelectConfigurator: { [key: string]: any };
 
   /**
    * {@see MatSelectSearchComponent} proxy inputs configurator
-   * {@see MatSelectSearchComponent#clearSearchInput} gets value from {@see NgxMatSelectTableComponent#resetFiltersOnOpen}
-   * {@see MatSelectSearchComponent} {@see ControlValueAccessor} gets value from {@see NgxMatSelectTableComponent#overallFilterControl}
+   * {@see MatSelectSearchComponent#clearSearchInput} gets value from {@see MatSelectTableComponent#resetFiltersOnOpen}
+   * {@see MatSelectSearchComponent} {@see ControlValueAccessor} gets value from {@see MatSelectTableComponent#overallFilterControl}
    */
   @Input() matSelectSearchConfigurator: { [key: string]: any };
 
