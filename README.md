@@ -17,7 +17,7 @@ npm install nosshar/ngx-mat-select-table#master
 Import the `NgxMatSelectTableModule` in your `app.module.ts`:
 ```typescript
 import { MatFormFieldModule, MatSelectModule } from '@angular/material';
-import { NgxMatSelectTableModule } from 'ngx-mat-select-table';
+import { NgxMatSelectTableModule } from 'ngx-mat-select-table/dist-lib';
 
 @NgModule({
   imports: [

@@ -11,7 +11,8 @@
     "test.ci": "npm run test -- --progress=false --watch=false",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build-lib": "ng-packagr -p ng-package.json"
+    "build-lib": "ng-packagr -p ng-package.json",
+    "postinstall": "npm run build-lib"
   },
   "private": false,
   "peerDependencies": {
@@ -63,6 +64,7 @@
     "protractor": "5.4.2",
     "ts-node": "7.0.1",
     "tslint": "5.12.0",
+    "tsickle": "^0.34.0",
     "typescript": "3.1.1",
     "webpack": "^4.28.2"
   },
