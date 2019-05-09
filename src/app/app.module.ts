@@ -3,7 +3,7 @@ import {NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
 import {HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {NgxMatSelectTableModule} from './ngx-mat-select-table/ngx-mat-select-table.module';
+import {NgxMatSelectTableModule} from './mat-select-table/ngx-mat-select-table.module';
 import {ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule, MatCheckboxModule, MatInputModule} from '@angular/material';
 

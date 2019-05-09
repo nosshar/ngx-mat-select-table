@@ -14,7 +14,20 @@
     "build-lib": "ng-packagr -p ng-package.json"
   },
   "private": false,
-  "dependencies": {
+  "peerDependencies": {
+    "@angular/core": "^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0",
+    "@angular/material": "^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0",
+    "rxjs": "^5.5.2 || ^6.0.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "0.12.1",
+    "@angular/cli": "7.1.4",
+    "@angular/compiler-cli": "7.1.4",
+    "@angular/language-service": "7.1.4",
+    "@types/jasmine": "3.3.5",
+    "@types/jasminewd2": "2.0.6",
+    "@types/node": "8.0.47",
+    "@types/stompjs": "2.3.4",
     "@angular/animations": "7.1.4",
     "@angular/cdk": "7.2.0",
     "@angular/common": "7.1.4",
@@ -35,17 +48,7 @@
     "web-animations-js": "2.3.1",
     "ngx-mat-select-search": "1.7.2",
     "classlist.js": "1.1.20150312",
-    "zone.js": "0.8.29"
-  },
-  "devDependencies": {
-    "@angular-devkit/build-angular": "0.12.1",
-    "@angular/cli": "7.1.4",
-    "@angular/compiler-cli": "7.1.4",
-    "@angular/language-service": "7.1.4",
-    "@types/jasmine": "3.3.5",
-    "@types/jasminewd2": "2.0.6",
-    "@types/node": "8.0.47",
-    "@types/stompjs": "2.3.4",
+    "zone.js": "0.8.29",
     "codelyzer": "4.5.0",
     "jasmine-core": "3.3.0",
     "jasmine-spec-reporter": "4.2.1",
@@ -56,6 +59,7 @@
     "karma-jasmine": "2.0.1",
     "karma-jasmine-html-reporter": "1.4.0",
     "node-sass": "4.9.3",
+    "ng-packagr": "^4.4.5",
     "protractor": "5.4.2",
     "ts-node": "7.0.1",
     "tslint": "5.12.0",
