@@ -33,9 +33,7 @@ export class AppModule {}
 Use the `ngx-mat-select-table` component inside a `mat-select` element by placing it inside a `<mat-option>` element:
 ```html
 <mat-form-field>
-  <ngx-mat-select-table *ngIf="redrawSubject$.value"
-                        [formControl]="control"
-                        style="width: 300px"
+  <ngx-mat-select-table [formControl]="control"
                         placeholder="Select something"
                         [multiple]="true"
                         [overallSearchEnabled]="true"
