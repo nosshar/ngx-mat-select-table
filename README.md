@@ -1,9 +1,6 @@
 # NgxMatSelectTable
 [https://github.com/nosshar/ngx-mat-select-table](https://github.com/nosshar/ngx-mat-select-table)
 
-[![npm version](https://img.shields.io/npm/v/ngx-mat-select-table.svg?style=flat-square)](https://www.npmjs.com/package/ngx-mat-select-table)
-[![npm downloads](https://img.shields.io/npm/dm/ngx-mat-select-table.svg?style=flat-square)](https://www.npmjs.com/package/ngx-mat-select-table)
-
 ## What does it do?
 Material Select Table component based on Angular Material ([Angular Material](https://material.angular.io)) library.
 Uses [MatSelect](https://material.angular.io/components/select/overview), [MatTable](https://material.angular.io/components/table/overview).
