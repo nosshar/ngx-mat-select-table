@@ -85,8 +85,8 @@ export class NgxMatSelectTableComponent implements ControlValueAccessor, OnInit,
 
   /**
    * {@see MatSelectSearchComponent} proxy inputs configurator
-   * {@see MatSelectSearchComponent#formControl} gets value from {@see NgxMatSelectTableComponent#overallFilterControl}
    * {@see MatSelectSearchComponent#clearSearchInput} gets value from {@see NgxMatSelectTableComponent#resetFiltersOnOpen}
+   * {@see MatSelectSearchComponent} {@see ControlValueAccessor} gets value from {@see NgxMatSelectTableComponent#overallFilterControl}
    */
   @Input() matSelectSearchConfigurator: { [key: string]: any };
 

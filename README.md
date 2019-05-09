@@ -105,8 +105,8 @@ and [https://github.com/nosshar/ngx-mat-select-table/blob/master/src/app/app.com
 
   /**
    * {@see MatSelectSearchComponent} proxy inputs configurator
-   * {@see MatSelectSearchComponent#formControl} gets value from {@see NgxMatSelectTableComponent#overallFilterControl}
    * {@see MatSelectSearchComponent#clearSearchInput} gets value from {@see NgxMatSelectTableComponent#resetFiltersOnOpen}
+   * {@see MatSelectSearchComponent} {@see ControlValueAccessor} gets value from {@see NgxMatSelectTableComponent#overallFilterControl}
    */
   @Input() matSelectSearchConfigurator: { [key: string]: any };
 ```
