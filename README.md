@@ -9,9 +9,9 @@ Uses [MatSelect](https://material.angular.io/components/select/overview), [MatTa
 Demo available [https://angular-7u6xkn.stackblitz.io](https://stackblitz.com/edit/angular-7u6xkn)
 
 ## How to use it?
-Install `ngx-mat-select-table` in your project:
+Install `ngx-mat-select-table` in your project (from GIT):
 ```
-npm install ngx-mat-select-table
+npm install nosshar/ngx-mat-select-table#master
 ```
 
 Import the `NgxMatSelectTableModule` in your `app.module.ts`:
