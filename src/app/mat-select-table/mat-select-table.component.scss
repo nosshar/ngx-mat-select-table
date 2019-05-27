@@ -39,6 +39,7 @@ $selectionCellWidth: 56px;
 
       .mat-select-search-input {
         margin-left: 26px;
+        width: calc(100% - 26px);
       }
     }
   }
