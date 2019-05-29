@@ -21,7 +21,7 @@ import {isArray, isNullOrUndefined} from 'util';
 import {MatSelectTableDataSource} from './MatSelectTableDataSource';
 import {MatSelectTableRow} from './MatSelectTableRow';
 import {_isNumberValue} from '@angular/cdk/coercion';
-import {debounceTime, takeUntil} from 'rxjs/operators';
+import {debounceTime, take, takeUntil} from 'rxjs/operators';
 import {MatSelectTableColumn} from './MatSelectTableColumn';
 import {MatSelectTableFilter} from './MatSelectTableFilter';
 import {MatSelectSearchComponent} from 'ngx-mat-select-search';
@@ -150,12 +150,12 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
         if (this.resetFiltersOnOpen !== false || !this.matOptions.length) {
           this.resetFilters();
         }
-        if (!opened) {
-          return;
-        }
         this.overallSearchVisibleState = this.overallSearchVisible;
         if (this.resetSortOnOpen !== false) {
           this.sort.sort({id: '', start: 'asc', disableClear: false});
+        }
+        if (!opened) {
+          return;
         }
         if (this.overallSearchEnabled) {
           this.proxyMatSelectSearchConfiguration(this.matSelectSearchConfigurator);
@@ -178,6 +178,22 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
           .forEach(row => tableAdditionalHeight += row.getBoundingClientRect().height);
         if (!isNaN(panelHeight)) {
           panelElement.style.maxHeight = `${panelHeight + tableAdditionalHeight}px`;
+        }
+
+        if (!this.matSelectSearchConfigurator.disableScrollToActiveOnOptionsChanged
+          && !isNullOrUndefined(this.matSelect._keyManager) && this.completeRowList.length > 0) {
+          setTimeout(() => {
+            const firstValue = `${this.completeRowList[0].id}`;
+            for (let i = 0; i < this.tableDataSource.length; i++) {
+              if (`${this.tableDataSource[i].id}` === firstValue) {
+                this.matSelect._keyManager.change.pipe(takeUntil(this._onDestroy), take(1)).subscribe(() => {
+                  this.matSelect._keyManager.setActiveItem(i);
+                  this.cd.detectChanges();
+                });
+                break;
+              }
+            }
+          });
         }
       });
   }

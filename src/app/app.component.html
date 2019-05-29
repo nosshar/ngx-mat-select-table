@@ -37,7 +37,8 @@
                         [formControl]="control"
                         [matSelectConfigurator]="{
                           placeholder: 'Select something',
-                          panelClass: 'custom-panel-width-600'
+                          panelClass: 'custom-panel-width-600',
+                          disableOptionCentering: true
                         }"
                         [matSelectSearchConfigurator]="{
                           placeholderLabel: 'Overall Search',
@@ -46,7 +47,7 @@
                           searching: false,
                           disableInitialFocus: false,
                           preventHomeEndKeyPropagation: true,
-                          disableScrollToActiveOnOptionsChanged: true,
+                          disableScrollToActiveOnOptionsChanged: false,
                           clearIcon: 'close'
                         }"
                         [multiple]="multipleValue"
