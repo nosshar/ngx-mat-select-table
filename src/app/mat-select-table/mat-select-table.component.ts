@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import {ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {merge, Subject, timer} from 'rxjs';
-import {MatOption, MatSelect, MatSort, MatTable, MatTableDataSource, SELECT_ITEM_HEIGHT_EM} from '@angular/material';
+import {MatOption, MatSelect, MatSort, MatTable, MatTableDataSource, SELECT_ITEM_HEIGHT_EM, SortDirection} from '@angular/material';
 import {isArray, isNullOrUndefined} from 'util';
 import {MatSelectTableDataSource} from './MatSelectTableDataSource';
 import {MatSelectTableRow} from './MatSelectTableRow';
@@ -25,6 +25,7 @@ import {debounce, debounceTime, distinctUntilChanged, take, takeUntil} from 'rxj
 import {MatSelectTableColumn} from './MatSelectTableColumn';
 import {MatSelectTableFilter} from './MatSelectTableFilter';
 import {MatSelectSearchComponent} from 'ngx-mat-select-search';
+import {Sort} from './sort';
 
 const MAX_SAFE_INTEGER = 9007199254740991;
 
@@ -89,6 +90,11 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
    * {@see MatSelectSearchComponent} {@see ControlValueAccessor} gets value from {@see MatSelectTableComponent#overallFilterControl}
    */
   @Input() matSelectSearchConfigurator: { [key: string]: any };
+
+  /**
+   * Apply default sorting
+   */
+  @Input() defaultSort: Sort;
 
   @ViewChild('componentSelect') private matSelect: MatSelect;
 
@@ -229,8 +235,10 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
           this.applyColumnLevelFilters(dataClone);
         }
 
-        // Apply sorting
-        this.tableDataSource = !this.sort.direction ? dataClone : this.sortData(dataClone, this.sort);
+        // Apply default sorting
+        this.tableDataSource = !this.defaultSort.active ? dataClone : this.sortData(dataClone, this.defaultSort.active, this.defaultSort.direction);
+        // Apply manual sorting
+        this.tableDataSource = !this.sort.direction ? this.tableDataSource : this.sortData(this.tableDataSource, this.sort.active, this.sort.direction);
 
         this.cd.detectChanges();
       });
@@ -564,8 +572,9 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
    * @param data
    * @param sortHeaderId
    */
-  private sortingDataAccessor(data: MatSelectTableRow, sortHeaderId: string): string | number {
-    const value = (data as { [key: string]: any })[sortHeaderId];
+  private sortingDataAccessor(data: MatSelectTableRow, active: string): string | number {
+
+    const value = (data as { [key: string]: any })[active];
 
     if (_isNumberValue(value)) {
       const numberValue = Number(value);
@@ -578,15 +587,8 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
     return value;
   }
 
-  /**
-   * Taken from {@see MatTableDataSource#sortData}
-   *
-   * @param data
-   * @param sort
-   */
-  private sortData(data: MatSelectTableRow[], sort: MatSort): MatSelectTableRow[] {
-    const active = sort.active;
-    const direction = sort.direction;
+
+  private sortData( data: MatSelectTableRow[], active: string, direction: SortDirection) : MatSelectTableRow[] {
     if (!active || direction === '') {
       return data;
     }
@@ -594,6 +596,7 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
     return data.sort((a, b) => {
       const valueA = this.sortingDataAccessor(a, active);
       const valueB = this.sortingDataAccessor(b, active);
+
 
       // If both valueA and valueB exist (truthy), then compare the two. Otherwise, check if
       // one value exists while the other doesn't. In this case, existing value should come first.
@@ -613,7 +616,8 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
         comparatorResult = -1;
       }
 
-      return comparatorResult * (direction === 'asc' ? 1 : -1);
+      let number = comparatorResult * (direction === 'asc' ? 1 : -1);
+      return number;
     });
   }
 
