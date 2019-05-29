@@ -2,7 +2,7 @@ import { __spread } from 'tslib';
 import { merge, Subject } from 'rxjs';
 import { isArray, isNullOrUndefined } from 'util';
 import { _isNumberValue } from '@angular/cdk/coercion';
-import { debounceTime, takeUntil } from 'rxjs/operators';
+import { debounceTime, take, takeUntil } from 'rxjs/operators';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, forwardRef, Input, ViewChild, ViewChildren, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSelectSearchComponent, NgxMatSelectSearchModule } from 'ngx-mat-select-search';
@@ -56,12 +56,12 @@ var MatSelectTableComponent = /** @class */ (function () {
             if (_this.resetFiltersOnOpen !== false || !_this.matOptions.length) {
                 _this.resetFilters();
             }
-            if (!opened) {
-                return;
-            }
             _this.overallSearchVisibleState = _this.overallSearchVisible;
             if (_this.resetSortOnOpen !== false) {
                 _this.sort.sort({ id: '', start: 'asc', disableClear: false });
+            }
+            if (!opened) {
+                return;
             }
             if (_this.overallSearchEnabled) {
                 _this.proxyMatSelectSearchConfiguration(_this.matSelectSearchConfigurator);
@@ -94,6 +94,33 @@ var MatSelectTableComponent = /** @class */ (function () {
             function (row) { return tableAdditionalHeight += row.getBoundingClientRect().height; }));
             if (!isNaN(panelHeight)) {
                 panelElement.style.maxHeight = panelHeight + tableAdditionalHeight + "px";
+            }
+            if (!_this.matSelectSearchConfigurator.disableScrollToActiveOnOptionsChanged
+                && !isNullOrUndefined(_this.matSelect._keyManager) && _this.completeRowList.length > 0) {
+                setTimeout((/**
+                 * @return {?}
+                 */
+                function () {
+                    /** @type {?} */
+                    var firstValue = "" + _this.completeRowList[0].id;
+                    var _loop_1 = function (i) {
+                        if ("" + _this.tableDataSource[i].id === firstValue) {
+                            _this.matSelect._keyManager.change.pipe(takeUntil(_this._onDestroy), take(1)).subscribe((/**
+                             * @return {?}
+                             */
+                            function () {
+                                _this.matSelect._keyManager.setActiveItem(i);
+                                _this.cd.detectChanges();
+                            }));
+                            return "break";
+                        }
+                    };
+                    for (var i = 0; i < _this.tableDataSource.length; i++) {
+                        var state_1 = _loop_1(i);
+                        if (state_1 === "break")
+                            break;
+                    }
+                }));
             }
         }));
     };

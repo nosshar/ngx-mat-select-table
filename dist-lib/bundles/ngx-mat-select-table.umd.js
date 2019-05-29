@@ -94,12 +94,12 @@
                     if (_this.resetFiltersOnOpen !== false || !_this.matOptions.length) {
                         _this.resetFilters();
                     }
-                    if (!opened) {
-                        return;
-                    }
                     _this.overallSearchVisibleState = _this.overallSearchVisible;
                     if (_this.resetSortOnOpen !== false) {
                         _this.sort.sort({ id: '', start: 'asc', disableClear: false });
+                    }
+                    if (!opened) {
+                        return;
                     }
                     if (_this.overallSearchEnabled) {
                         _this.proxyMatSelectSearchConfiguration(_this.matSelectSearchConfigurator);
@@ -131,6 +131,31 @@
                  */function (row) { return tableAdditionalHeight += row.getBoundingClientRect().height; }));
                     if (!isNaN(panelHeight)) {
                         panelElement.style.maxHeight = panelHeight + tableAdditionalHeight + "px";
+                    }
+                    if (!_this.matSelectSearchConfigurator.disableScrollToActiveOnOptionsChanged
+                        && !util.isNullOrUndefined(_this.matSelect._keyManager) && _this.completeRowList.length > 0) {
+                        setTimeout(( /**
+                         * @return {?}
+                         */function () {
+                            /** @type {?} */
+                            var firstValue = "" + _this.completeRowList[0].id;
+                            var _loop_1 = function (i) {
+                                if ("" + _this.tableDataSource[i].id === firstValue) {
+                                    _this.matSelect._keyManager.change.pipe(operators.takeUntil(_this._onDestroy), operators.take(1)).subscribe(( /**
+                                     * @return {?}
+                                     */function () {
+                                        _this.matSelect._keyManager.setActiveItem(i);
+                                        _this.cd.detectChanges();
+                                    }));
+                                    return "break";
+                                }
+                            };
+                            for (var i = 0; i < _this.tableDataSource.length; i++) {
+                                var state_1 = _loop_1(i);
+                                if (state_1 === "break")
+                                    break;
+                            }
+                        }));
                     }
                 }));
             };
