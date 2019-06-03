@@ -196,7 +196,11 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
           });
         }
 
-        // Manual scrolling implementation
+        /**
+         * Manual scrolling implementation.
+         * Currently MatOption height less than the row height (42 < 48).
+         * ToDo: find why {@see MatSelectSearchComponent#adjustScrollTopToFitActiveOptionIntoView()} sets incorrect scrollTop value.
+         */
         if (!isNullOrUndefined(this.matSelect._keyManager)) {
           this.matSelect._keyManager.change
             .pipe(takeUntil(this._onDestroy), debounce(() => timer(1)), distinctUntilChanged())
