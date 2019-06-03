@@ -15,13 +15,13 @@ import {
   ViewChildren
 } from '@angular/core';
 import {ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {merge, Subject} from 'rxjs';
-import {MatOption, MatSelect, MatSort, MatTable, MatTableDataSource} from '@angular/material';
+import {merge, Subject, timer} from 'rxjs';
+import {MatOption, MatSelect, MatSort, MatTable, MatTableDataSource, SELECT_ITEM_HEIGHT_EM} from '@angular/material';
 import {isArray, isNullOrUndefined} from 'util';
 import {MatSelectTableDataSource} from './MatSelectTableDataSource';
 import {MatSelectTableRow} from './MatSelectTableRow';
 import {_isNumberValue} from '@angular/cdk/coercion';
-import {debounceTime, take, takeUntil} from 'rxjs/operators';
+import {debounce, debounceTime, distinctUntilChanged, take, takeUntil} from 'rxjs/operators';
 import {MatSelectTableColumn} from './MatSelectTableColumn';
 import {MatSelectTableFilter} from './MatSelectTableFilter';
 import {MatSelectSearchComponent} from 'ngx-mat-select-search';
@@ -194,6 +194,16 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
               }
             }
           });
+        }
+
+        // Manual scrolling implementation
+        if (!isNullOrUndefined(this.matSelect._keyManager)) {
+          this.matSelect._keyManager.change
+            .pipe(takeUntil(this._onDestroy), debounce(() => timer(1)), distinctUntilChanged())
+            .subscribe(() => {
+              // ToDo: 1em = 16px hardcode, should be calculated dynamically
+              setTimeout(() => panelElement.scrollTop = this.matSelect._keyManager.activeItemIndex * SELECT_ITEM_HEIGHT_EM * 16);
+            });
         }
       });
   }

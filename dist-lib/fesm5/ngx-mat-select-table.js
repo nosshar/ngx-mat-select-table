@@ -1,12 +1,12 @@
 import { __spread } from 'tslib';
-import { merge, Subject } from 'rxjs';
+import { merge, Subject, timer } from 'rxjs';
 import { isArray, isNullOrUndefined } from 'util';
 import { _isNumberValue } from '@angular/cdk/coercion';
-import { debounceTime, take, takeUntil } from 'rxjs/operators';
+import { debounce, debounceTime, distinctUntilChanged, take, takeUntil } from 'rxjs/operators';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, forwardRef, Input, ViewChild, ViewChildren, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSelectSearchComponent, NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-import { MatOption, MatSort, MatTable, MatCommonModule, MatIconModule, MatInputModule, MatOptionModule, MatSelectModule, MatSortModule, MatTableModule } from '@angular/material';
+import { MatOption, MatSort, MatTable, SELECT_ITEM_HEIGHT_EM, MatCommonModule, MatIconModule, MatInputModule, MatOptionModule, MatSelectModule, MatSortModule, MatTableModule } from '@angular/material';
 import { FormControl, FormGroup, NG_VALUE_ACCESSOR, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 /**
@@ -120,6 +120,24 @@ var MatSelectTableComponent = /** @class */ (function () {
                         if (state_1 === "break")
                             break;
                     }
+                }));
+            }
+            // Manual scrolling implementation
+            if (!isNullOrUndefined(_this.matSelect._keyManager)) {
+                _this.matSelect._keyManager.change
+                    .pipe(takeUntil(_this._onDestroy), debounce((/**
+                 * @return {?}
+                 */
+                function () { return timer(1); })), distinctUntilChanged())
+                    .subscribe((/**
+                 * @return {?}
+                 */
+                function () {
+                    // ToDo: 1em = 16px hardcode, should be calculated dynamically
+                    setTimeout((/**
+                     * @return {?}
+                     */
+                    function () { return panelElement.scrollTop = _this.matSelect._keyManager.activeItemIndex * SELECT_ITEM_HEIGHT_EM * 16; }));
                 }));
             }
         }));

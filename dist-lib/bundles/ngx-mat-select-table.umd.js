@@ -157,6 +157,21 @@
                             }
                         }));
                     }
+                    // Manual scrolling implementation
+                    if (!util.isNullOrUndefined(_this.matSelect._keyManager)) {
+                        _this.matSelect._keyManager.change
+                            .pipe(operators.takeUntil(_this._onDestroy), operators.debounce(( /**
+                     * @return {?}
+                     */function () { return rxjs.timer(1); })), operators.distinctUntilChanged())
+                            .subscribe(( /**
+                     * @return {?}
+                     */function () {
+                            // ToDo: 1em = 16px hardcode, should be calculated dynamically
+                            setTimeout(( /**
+                             * @return {?}
+                             */function () { return panelElement.scrollTop = _this.matSelect._keyManager.activeItemIndex * material.SELECT_ITEM_HEIGHT_EM * 16; }));
+                        }));
+                    }
                 }));
             };
         /**
