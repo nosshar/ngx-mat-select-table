@@ -324,6 +324,7 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
         .filter(key => !['multiple', 'panelClass'].includes(key) && !this.controlValueAccessorKeys.includes(key))
         .forEach(key => this.matSelect[key] = configuration[key]);
       const panelClass: string[] = [];
+      panelClass.push('mat-select-search-table-panel');
       if (!isNullOrUndefined(configuration.panelClass)) {
         panelClass.push(configuration.panelClass);
       }

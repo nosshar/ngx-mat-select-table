@@ -15,7 +15,7 @@ $selectionCellWidth: 56px;
 
 }
 
-::ng-deep .mat-select-panel {
+::ng-deep .mat-select-panel.mat-select-search-table-panel {
   overflow-x: auto !important;
 
   .overall-search-toggle {
