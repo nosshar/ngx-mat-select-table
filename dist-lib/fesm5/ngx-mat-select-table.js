@@ -173,7 +173,7 @@ var MatSelectTableComponent = /** @class */ (function () {
                 _this.applyColumnLevelFilters(dataClone);
             }
             // Apply default sorting
-            _this.tableDataSource = !_this.defaultSort.active ?
+            _this.tableDataSource = isNullOrUndefined(_this.defaultSort) || !_this.defaultSort.active ?
                 dataClone : _this.sortData(dataClone, _this.defaultSort.active, _this.defaultSort.direction);
             // Apply manual sorting
             _this.tableDataSource = !_this.sort.direction ?
