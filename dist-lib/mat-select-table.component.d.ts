@@ -1,5 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { ControlValueAccessor, FormControl } from '@angular/forms';
+import { Sort } from '@angular/material';
 import { MatSelectTableDataSource } from './MatSelectTableDataSource';
 import { MatSelectTableRow } from './MatSelectTableRow';
 import { MatSelectTableColumn } from './MatSelectTableColumn';
@@ -45,6 +46,10 @@ export declare class MatSelectTableComponent implements ControlValueAccessor, On
     matSelectSearchConfigurator: {
         [key: string]: any;
     };
+    /**
+     * Apply default sorting
+     */
+    defaultSort: Sort;
     private matSelect;
     private matSelectSearch;
     private sort;
@@ -93,11 +98,5 @@ export declare class MatSelectTableComponent implements ControlValueAccessor, On
      * @param sortHeaderId
      */
     private sortingDataAccessor;
-    /**
-     * Taken from {@see MatTableDataSource#sortData}
-     *
-     * @param data
-     * @param sort
-     */
     private sortData;
 }

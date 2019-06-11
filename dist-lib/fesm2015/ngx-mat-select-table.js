@@ -162,8 +162,12 @@ class MatSelectTableComponent {
             else {
                 this.applyColumnLevelFilters(dataClone);
             }
-            // Apply sorting
-            this.tableDataSource = !this.sort.direction ? dataClone : this.sortData(dataClone, this.sort);
+            // Apply default sorting
+            this.tableDataSource = !this.defaultSort.active ?
+                dataClone : this.sortData(dataClone, this.defaultSort.active, this.defaultSort.direction);
+            // Apply manual sorting
+            this.tableDataSource = !this.sort.direction ?
+                this.tableDataSource : this.sortData(this.tableDataSource, this.sort.active, this.sort.direction);
             this.cd.detectChanges();
         }));
         // Manually sort data for this.matSelect.options (QueryList<MatOption>) and notify matSelect.options of changes
@@ -736,12 +740,12 @@ class MatSelectTableComponent {
      *
      * @private
      * @param {?} data
-     * @param {?} sortHeaderId
+     * @param {?} active
      * @return {?}
      */
-    sortingDataAccessor(data, sortHeaderId) {
+    sortingDataAccessor(data, active) {
         /** @type {?} */
-        const value = ((/** @type {?} */ (data)))[sortHeaderId];
+        const value = ((/** @type {?} */ (data)))[active];
         if (_isNumberValue(value)) {
             /** @type {?} */
             const numberValue = Number(value);
@@ -752,18 +756,13 @@ class MatSelectTableComponent {
         return value;
     }
     /**
-     * Taken from {\@see MatTableDataSource#sortData}
-     *
      * @private
      * @param {?} data
-     * @param {?} sort
+     * @param {?} active
+     * @param {?} direction
      * @return {?}
      */
-    sortData(data, sort) {
-        /** @type {?} */
-        const active = sort.active;
-        /** @type {?} */
-        const direction = sort.direction;
+    sortData(data, active, direction) {
         if (!active || direction === '') {
             return data;
         }
@@ -836,6 +835,7 @@ MatSelectTableComponent.propDecorators = {
     customTriggerLabelTemplate: [{ type: Input }],
     matSelectConfigurator: [{ type: Input }],
     matSelectSearchConfigurator: [{ type: Input }],
+    defaultSort: [{ type: Input }],
     matSelect: [{ type: ViewChild, args: ['componentSelect',] }],
     matSelectSearch: [{ type: ViewChild, args: [MatSelectSearchComponent,] }],
     sort: [{ type: ViewChild, args: [MatSort,] }],

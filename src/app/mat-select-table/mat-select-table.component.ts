@@ -16,7 +16,7 @@ import {
 } from '@angular/core';
 import {ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {merge, Subject, timer} from 'rxjs';
-import {MatOption, MatSelect, MatSort, MatTable, MatTableDataSource, SELECT_ITEM_HEIGHT_EM, SortDirection} from '@angular/material';
+import {MatOption, MatSelect, MatSort, MatTable, MatTableDataSource, SELECT_ITEM_HEIGHT_EM, Sort, SortDirection} from '@angular/material';
 import {isArray, isNullOrUndefined} from 'util';
 import {MatSelectTableDataSource} from './MatSelectTableDataSource';
 import {MatSelectTableRow} from './MatSelectTableRow';
@@ -25,7 +25,6 @@ import {debounce, debounceTime, distinctUntilChanged, take, takeUntil} from 'rxj
 import {MatSelectTableColumn} from './MatSelectTableColumn';
 import {MatSelectTableFilter} from './MatSelectTableFilter';
 import {MatSelectSearchComponent} from 'ngx-mat-select-search';
-import {Sort} from './sort';
 
 const MAX_SAFE_INTEGER = 9007199254740991;
 
@@ -236,9 +235,11 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
         }
 
         // Apply default sorting
-        this.tableDataSource = !this.defaultSort.active ? dataClone : this.sortData(dataClone, this.defaultSort.active, this.defaultSort.direction);
+        this.tableDataSource = !this.defaultSort.active ?
+          dataClone : this.sortData(dataClone, this.defaultSort.active, this.defaultSort.direction);
         // Apply manual sorting
-        this.tableDataSource = !this.sort.direction ? this.tableDataSource : this.sortData(this.tableDataSource, this.sort.active, this.sort.direction);
+        this.tableDataSource = !this.sort.direction ?
+          this.tableDataSource : this.sortData(this.tableDataSource, this.sort.active, this.sort.direction);
 
         this.cd.detectChanges();
       });
@@ -589,7 +590,7 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
   }
 
 
-  private sortData( data: MatSelectTableRow[], active: string, direction: SortDirection) : MatSelectTableRow[] {
+  private sortData(data: MatSelectTableRow[], active: string, direction: SortDirection): MatSelectTableRow[] {
     if (!active || direction === '') {
       return data;
     }
@@ -617,8 +618,7 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
         comparatorResult = -1;
       }
 
-      let number = comparatorResult * (direction === 'asc' ? 1 : -1);
-      return number;
+      return comparatorResult * (direction === 'asc' ? 1 : -1);
     });
   }
 

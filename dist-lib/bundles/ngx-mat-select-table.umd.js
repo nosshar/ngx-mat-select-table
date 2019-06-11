@@ -203,8 +203,12 @@
                     else {
                         _this.applyColumnLevelFilters(dataClone);
                     }
-                    // Apply sorting
-                    _this.tableDataSource = !_this.sort.direction ? dataClone : _this.sortData(dataClone, _this.sort);
+                    // Apply default sorting
+                    _this.tableDataSource = !_this.defaultSort.active ?
+                        dataClone : _this.sortData(dataClone, _this.defaultSort.active, _this.defaultSort.direction);
+                    // Apply manual sorting
+                    _this.tableDataSource = !_this.sort.direction ?
+                        _this.tableDataSource : _this.sortData(_this.tableDataSource, _this.sort.active, _this.sort.direction);
                     _this.cd.detectChanges();
                 }));
                 // Manually sort data for this.matSelect.options (QueryList<MatOption>) and notify matSelect.options of changes
@@ -824,7 +828,7 @@
          *
          * @private
          * @param {?} data
-         * @param {?} sortHeaderId
+         * @param {?} active
          * @return {?}
          */
         MatSelectTableComponent.prototype.sortingDataAccessor = /**
@@ -832,12 +836,12 @@
          *
          * @private
          * @param {?} data
-         * @param {?} sortHeaderId
+         * @param {?} active
          * @return {?}
          */
-            function (data, sortHeaderId) {
+            function (data, active) {
                 /** @type {?} */
-                var value = (( /** @type {?} */(data)))[sortHeaderId];
+                var value = (( /** @type {?} */(data)))[active];
                 if (coercion._isNumberValue(value)) {
                     /** @type {?} */
                     var numberValue = Number(value);
@@ -848,33 +852,21 @@
                 return value;
             };
         /**
-         * Taken from {@see MatTableDataSource#sortData}
-         *
-         * @param data
-         * @param sort
-         */
-        /**
-         * Taken from {\@see MatTableDataSource#sortData}
-         *
          * @private
          * @param {?} data
-         * @param {?} sort
+         * @param {?} active
+         * @param {?} direction
          * @return {?}
          */
         MatSelectTableComponent.prototype.sortData = /**
-         * Taken from {\@see MatTableDataSource#sortData}
-         *
          * @private
          * @param {?} data
-         * @param {?} sort
+         * @param {?} active
+         * @param {?} direction
          * @return {?}
          */
-            function (data, sort) {
+            function (data, active, direction) {
                 var _this = this;
-                /** @type {?} */
-                var active = sort.active;
-                /** @type {?} */
-                var direction = sort.direction;
                 if (!active || direction === '') {
                     return data;
                 }
@@ -946,6 +938,7 @@
             customTriggerLabelTemplate: [{ type: core.Input }],
             matSelectConfigurator: [{ type: core.Input }],
             matSelectSearchConfigurator: [{ type: core.Input }],
+            defaultSort: [{ type: core.Input }],
             matSelect: [{ type: core.ViewChild, args: ['componentSelect',] }],
             matSelectSearch: [{ type: core.ViewChild, args: [ngxMatSelectSearch.MatSelectSearchComponent,] }],
             sort: [{ type: core.ViewChild, args: [material.MatSort,] }],

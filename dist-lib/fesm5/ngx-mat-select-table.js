@@ -172,8 +172,12 @@ var MatSelectTableComponent = /** @class */ (function () {
             else {
                 _this.applyColumnLevelFilters(dataClone);
             }
-            // Apply sorting
-            _this.tableDataSource = !_this.sort.direction ? dataClone : _this.sortData(dataClone, _this.sort);
+            // Apply default sorting
+            _this.tableDataSource = !_this.defaultSort.active ?
+                dataClone : _this.sortData(dataClone, _this.defaultSort.active, _this.defaultSort.direction);
+            // Apply manual sorting
+            _this.tableDataSource = !_this.sort.direction ?
+                _this.tableDataSource : _this.sortData(_this.tableDataSource, _this.sort.active, _this.sort.direction);
             _this.cd.detectChanges();
         }));
         // Manually sort data for this.matSelect.options (QueryList<MatOption>) and notify matSelect.options of changes
@@ -831,7 +835,7 @@ var MatSelectTableComponent = /** @class */ (function () {
      *
      * @private
      * @param {?} data
-     * @param {?} sortHeaderId
+     * @param {?} active
      * @return {?}
      */
     MatSelectTableComponent.prototype.sortingDataAccessor = /**
@@ -839,12 +843,12 @@ var MatSelectTableComponent = /** @class */ (function () {
      *
      * @private
      * @param {?} data
-     * @param {?} sortHeaderId
+     * @param {?} active
      * @return {?}
      */
-    function (data, sortHeaderId) {
+    function (data, active) {
         /** @type {?} */
-        var value = ((/** @type {?} */ (data)))[sortHeaderId];
+        var value = ((/** @type {?} */ (data)))[active];
         if (_isNumberValue(value)) {
             /** @type {?} */
             var numberValue = Number(value);
@@ -855,33 +859,21 @@ var MatSelectTableComponent = /** @class */ (function () {
         return value;
     };
     /**
-     * Taken from {@see MatTableDataSource#sortData}
-     *
-     * @param data
-     * @param sort
-     */
-    /**
-     * Taken from {\@see MatTableDataSource#sortData}
-     *
      * @private
      * @param {?} data
-     * @param {?} sort
+     * @param {?} active
+     * @param {?} direction
      * @return {?}
      */
     MatSelectTableComponent.prototype.sortData = /**
-     * Taken from {\@see MatTableDataSource#sortData}
-     *
      * @private
      * @param {?} data
-     * @param {?} sort
+     * @param {?} active
+     * @param {?} direction
      * @return {?}
      */
-    function (data, sort) {
+    function (data, active, direction) {
         var _this = this;
-        /** @type {?} */
-        var active = sort.active;
-        /** @type {?} */
-        var direction = sort.direction;
         if (!active || direction === '') {
             return data;
         }
@@ -953,6 +945,7 @@ var MatSelectTableComponent = /** @class */ (function () {
         customTriggerLabelTemplate: [{ type: Input }],
         matSelectConfigurator: [{ type: Input }],
         matSelectSearchConfigurator: [{ type: Input }],
+        defaultSort: [{ type: Input }],
         matSelect: [{ type: ViewChild, args: ['componentSelect',] }],
         matSelectSearch: [{ type: ViewChild, args: [MatSelectSearchComponent,] }],
         sort: [{ type: ViewChild, args: [MatSort,] }],
