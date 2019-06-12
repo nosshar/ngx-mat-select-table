@@ -876,31 +876,42 @@
                  * @return {?}
                  */function (a, b) {
                     /** @type {?} */
-                    var valueA = _this.sortingDataAccessor(a, active);
+                    var aValue = _this.sortingDataAccessor(a, active);
                     /** @type {?} */
-                    var valueB = _this.sortingDataAccessor(b, active);
-                    // If both valueA and valueB exist (truthy), then compare the two. Otherwise, check if
-                    // one value exists while the other doesn't. In this case, existing value should come first.
-                    // This avoids inconsistent results when comparing values to undefined/null.
-                    // If neither value exists, return 0 (equal).
-                    /** @type {?} */
-                    var comparatorResult = 0;
-                    if (valueA != null && valueB != null) {
-                        // Check if one value is greater than the other; if equal, comparatorResult should remain 0.
-                        if (valueA > valueB) {
-                            comparatorResult = 1;
-                        }
-                        else if (valueA < valueB) {
-                            comparatorResult = -1;
-                        }
+                    var bValue = _this.sortingDataAccessor(b, active);
+                    // Both null/undefined/equal value check
+                    if (aValue === bValue) {
+                        return 0;
                     }
-                    else if (valueA != null) {
-                        comparatorResult = 1;
+                    // One null value check
+                    if (util.isNullOrUndefined(aValue) && !util.isNullOrUndefined(bValue)) {
+                        return -1;
                     }
-                    else if (valueB != null) {
-                        comparatorResult = -1;
+                    else if (!util.isNullOrUndefined(aValue) && util.isNullOrUndefined(bValue)) {
+                        return 1;
                     }
-                    return comparatorResult * (direction === 'asc' ? 1 : -1);
+                    if (aValue instanceof Date) {
+                        aValue = aValue.getTime();
+                    }
+                    if (bValue instanceof Date) {
+                        bValue = bValue.getTime();
+                    }
+                    // User localeCompare for strings
+                    if (util.isString(aValue) && util.isString(bValue)) {
+                        return (( /** @type {?} */(aValue))).localeCompare(( /** @type {?} */(bValue))) * (_this.sort.direction === 'asc' ? 1 : -1);
+                    }
+                    // Try to convert to a Number type
+                    aValue = isNaN(( /** @type {?} */(aValue))) ? "" + aValue : +aValue;
+                    bValue = isNaN(( /** @type {?} */(bValue))) ? "" + bValue : +bValue;
+                    // if one is number and other is String
+                    if (util.isString(aValue) && util.isNumber(bValue)) {
+                        return (1) * (_this.sort.direction === 'asc' ? 1 : -1);
+                    }
+                    if (util.isNumber(aValue) && util.isString(bValue)) {
+                        return (-1) * (_this.sort.direction === 'asc' ? 1 : -1);
+                    }
+                    // Compare as Numbers otherwise
+                    return (aValue > bValue ? 1 : -1) * (_this.sort.direction === 'asc' ? 1 : -1);
                 }));
             };
         MatSelectTableComponent.decorators = [

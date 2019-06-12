@@ -17,7 +17,7 @@ import {
 import {ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {merge, Subject, timer} from 'rxjs';
 import {MatOption, MatSelect, MatSort, MatTable, MatTableDataSource, SELECT_ITEM_HEIGHT_EM, Sort, SortDirection} from '@angular/material';
-import {isArray, isNullOrUndefined} from 'util';
+import {isArray, isNullOrUndefined, isNumber, isString} from 'util';
 import {MatSelectTableDataSource} from './MatSelectTableDataSource';
 import {MatSelectTableRow} from './MatSelectTableRow';
 import {_isNumberValue} from '@angular/cdk/coercion';
@@ -574,7 +574,7 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
    * @param data
    * @param sortHeaderId
    */
-  private sortingDataAccessor(data: MatSelectTableRow, active: string): string | number {
+  private sortingDataAccessor(data: MatSelectTableRow, active: string): string | number | Date {
 
     const value = (data as { [key: string]: any })[active];
 
@@ -596,29 +596,47 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
     }
 
     return data.sort((a, b) => {
-      const valueA = this.sortingDataAccessor(a, active);
-      const valueB = this.sortingDataAccessor(b, active);
+      let aValue = this.sortingDataAccessor(a, active);
+      let bValue = this.sortingDataAccessor(b, active);
 
-
-      // If both valueA and valueB exist (truthy), then compare the two. Otherwise, check if
-      // one value exists while the other doesn't. In this case, existing value should come first.
-      // This avoids inconsistent results when comparing values to undefined/null.
-      // If neither value exists, return 0 (equal).
-      let comparatorResult = 0;
-      if (valueA != null && valueB != null) {
-        // Check if one value is greater than the other; if equal, comparatorResult should remain 0.
-        if (valueA > valueB) {
-          comparatorResult = 1;
-        } else if (valueA < valueB) {
-          comparatorResult = -1;
-        }
-      } else if (valueA != null) {
-        comparatorResult = 1;
-      } else if (valueB != null) {
-        comparatorResult = -1;
+      // Both null/undefined/equal value check
+      if (aValue === bValue) {
+        return 0;
       }
 
-      return comparatorResult * (direction === 'asc' ? 1 : -1);
+      // One null value check
+      if (isNullOrUndefined(aValue) && !isNullOrUndefined(bValue)) {
+        return -1;
+      } else if (!isNullOrUndefined(aValue) && isNullOrUndefined(bValue)) {
+        return 1;
+      }
+
+      if (aValue instanceof Date) {
+        aValue = aValue.getTime();
+      }
+      if (bValue instanceof Date) {
+        bValue = bValue.getTime();
+      }
+
+      // User localeCompare for strings
+      if (isString(aValue) && isString(bValue)) {
+        return (<string>aValue).localeCompare(<string>bValue) * (this.sort.direction === 'asc' ? 1 : -1);
+      }
+
+      // Try to convert to a Number type
+      aValue = isNaN(<number>aValue) ? `${aValue}` : +aValue;
+      bValue = isNaN(<number>bValue) ? `${bValue}` : +bValue;
+
+      // if one is number and other is String
+      if (isString(aValue) && isNumber(bValue)) {
+        return (1) * (this.sort.direction === 'asc' ? 1 : -1);
+      }
+      if (isNumber(aValue) && isString(bValue)) {
+        return (-1) * (this.sort.direction === 'asc' ? 1 : -1);
+      }
+
+      // Compare as Numbers otherwise
+      return (aValue > bValue ? 1 : -1) * (this.sort.direction === 'asc' ? 1 : -1);
     });
   }
 
