@@ -76,7 +76,7 @@ export class AppComponent implements OnInit, OnDestroy {
   };
 
   multipleValue: boolean = this.multiple.value;
-  defaultSort = {active: 'address' , direction: 'desc'};
+  defaultSort = {active: 'address' , direction: 'asc'};
 
   constructor() {
     this.control = new FormControl(null);

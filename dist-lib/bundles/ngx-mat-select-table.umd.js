@@ -203,12 +203,14 @@
                     else {
                         _this.applyColumnLevelFilters(dataClone);
                     }
-                    // Apply default sorting
-                    _this.tableDataSource = util.isNullOrUndefined(_this.defaultSort) || !_this.defaultSort.active ?
-                        dataClone : _this.sortData(dataClone, _this.defaultSort.active, _this.defaultSort.direction);
-                    // Apply manual sorting
-                    _this.tableDataSource = !_this.sort.direction ?
-                        _this.tableDataSource : _this.sortData(_this.tableDataSource, _this.sort.active, _this.sort.direction);
+                    // Inherit default sorting options if sort not specified
+                    if (!_this.sort.active && !util.isNullOrUndefined(_this.defaultSort) && _this.defaultSort.active) {
+                        _this.sort.active = _this.defaultSort.active;
+                        _this.sort.direction = _this.defaultSort.direction;
+                    }
+                    // Apply default or manual sorting
+                    _this.tableDataSource = !_this.sort.active ?
+                        dataClone : _this.sortData(dataClone, _this.sort.active, _this.sort.direction);
                     _this.cd.detectChanges();
                 }));
                 // Manually sort data for this.matSelect.options (QueryList<MatOption>) and notify matSelect.options of changes

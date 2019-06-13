@@ -162,12 +162,14 @@ class MatSelectTableComponent {
             else {
                 this.applyColumnLevelFilters(dataClone);
             }
-            // Apply default sorting
-            this.tableDataSource = isNullOrUndefined(this.defaultSort) || !this.defaultSort.active ?
-                dataClone : this.sortData(dataClone, this.defaultSort.active, this.defaultSort.direction);
-            // Apply manual sorting
-            this.tableDataSource = !this.sort.direction ?
-                this.tableDataSource : this.sortData(this.tableDataSource, this.sort.active, this.sort.direction);
+            // Inherit default sorting options if sort not specified
+            if (!this.sort.active && !isNullOrUndefined(this.defaultSort) && this.defaultSort.active) {
+                this.sort.active = this.defaultSort.active;
+                this.sort.direction = this.defaultSort.direction;
+            }
+            // Apply default or manual sorting
+            this.tableDataSource = !this.sort.active ?
+                dataClone : this.sortData(dataClone, this.sort.active, this.sort.direction);
             this.cd.detectChanges();
         }));
         // Manually sort data for this.matSelect.options (QueryList<MatOption>) and notify matSelect.options of changes
