@@ -49,6 +49,13 @@ $selectionCellWidth: 56px;
 
     tr {
       cursor: pointer;
+      height: 48px;
+      max-height: 48px;
+
+      mat-option {
+        height: 48px;
+        max-height: 48px;
+      }
 
       &.active {
         background: rgba(0, 0, 0, 0.04);
@@ -56,6 +63,10 @@ $selectionCellWidth: 56px;
 
       td {
         @include user-select(none);
+        border-bottom: 0 !important;
+        -webkit-box-shadow: inset 0px -1px 0px 0px rgba(0, 0, 0, 0.12);
+        -moz-box-shadow: inset 0px -1px 0px 0px rgba(0, 0, 0, 0.12);
+        box-shadow: inset 0px -1px 0px 0px rgba(0, 0, 0, 0.12);
       }
 
       th ::ng-deep .mat-sort-header-container {
