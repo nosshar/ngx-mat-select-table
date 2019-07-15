@@ -34,6 +34,7 @@ class MatSelectTableComponent {
          * Subject that emits when the component has been destroyed.
          */
         this._onDestroy = new Subject();
+        this._onSelectOpen = new Subject();
         this._onOptionsChange = new Subject();
         this.tableColumnsMap = new Map();
         this.filterControls = new FormGroup({});
@@ -95,7 +96,7 @@ class MatSelectTableComponent {
             }
             if (!this.matSelectSearchConfigurator.disableScrollToActiveOnOptionsChanged
                 && !isNullOrUndefined(this.matSelect._keyManager) && this.completeRowList.length > 0) {
-                setTimeout((/**
+                this._onSelectOpen.pipe(takeUntil(this._onDestroy), debounceTime(1), take(1)).subscribe((/**
                  * @return {?}
                  */
                 () => {
@@ -103,13 +104,8 @@ class MatSelectTableComponent {
                     const firstValue = `${this.completeRowList[0].id}`;
                     for (let i = 0; i < this.tableDataSource.length; i++) {
                         if (`${this.tableDataSource[i].id}` === firstValue) {
-                            this.matSelect._keyManager.change.pipe(takeUntil(this._onDestroy), take(1)).subscribe((/**
-                             * @return {?}
-                             */
-                            () => {
-                                this.matSelect._keyManager.setActiveItem(i);
-                                this.cd.detectChanges();
-                            }));
+                            this.matSelect._keyManager.setActiveItem(i);
+                            this.cd.detectChanges();
                             break;
                         }
                     }
@@ -149,6 +145,7 @@ class MatSelectTableComponent {
             this.tableDataSource = !this.sort.active ?
                 dataClone : this.sortData(dataClone, this.sort.active, this.sort.direction);
             this.cd.detectChanges();
+            this._onSelectOpen.next();
         }));
         // Manually sort data for this.matSelect.options (QueryList<MatOption>) and notify matSelect.options of changes
         // It's important to keep this.matSelect.options order synchronized with data in the table
@@ -198,6 +195,7 @@ class MatSelectTableComponent {
      * @return {?}
      */
     ngOnDestroy() {
+        this._onSelectOpen.complete();
         this._onDestroy.next();
         this._onDestroy.complete();
     }

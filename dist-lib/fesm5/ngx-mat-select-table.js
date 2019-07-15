@@ -32,6 +32,7 @@ var MatSelectTableComponent = /** @class */ (function () {
          * Subject that emits when the component has been destroyed.
          */
         this._onDestroy = new Subject();
+        this._onSelectOpen = new Subject();
         this._onOptionsChange = new Subject();
         this.tableColumnsMap = new Map();
         this.filterControls = new FormGroup({});
@@ -97,28 +98,18 @@ var MatSelectTableComponent = /** @class */ (function () {
             }
             if (!_this.matSelectSearchConfigurator.disableScrollToActiveOnOptionsChanged
                 && !isNullOrUndefined(_this.matSelect._keyManager) && _this.completeRowList.length > 0) {
-                setTimeout((/**
+                _this._onSelectOpen.pipe(takeUntil(_this._onDestroy), debounceTime(1), take(1)).subscribe((/**
                  * @return {?}
                  */
                 function () {
                     /** @type {?} */
                     var firstValue = "" + _this.completeRowList[0].id;
-                    var _loop_1 = function (i) {
-                        if ("" + _this.tableDataSource[i].id === firstValue) {
-                            _this.matSelect._keyManager.change.pipe(takeUntil(_this._onDestroy), take(1)).subscribe((/**
-                             * @return {?}
-                             */
-                            function () {
-                                _this.matSelect._keyManager.setActiveItem(i);
-                                _this.cd.detectChanges();
-                            }));
-                            return "break";
-                        }
-                    };
                     for (var i = 0; i < _this.tableDataSource.length; i++) {
-                        var state_1 = _loop_1(i);
-                        if (state_1 === "break")
+                        if ("" + _this.tableDataSource[i].id === firstValue) {
+                            _this.matSelect._keyManager.setActiveItem(i);
+                            _this.cd.detectChanges();
                             break;
+                        }
                     }
                 }));
             }
@@ -159,6 +150,7 @@ var MatSelectTableComponent = /** @class */ (function () {
             _this.tableDataSource = !_this.sort.active ?
                 dataClone : _this.sortData(dataClone, _this.sort.active, _this.sort.direction);
             _this.cd.detectChanges();
+            _this._onSelectOpen.next();
         }));
         // Manually sort data for this.matSelect.options (QueryList<MatOption>) and notify matSelect.options of changes
         // It's important to keep this.matSelect.options order synchronized with data in the table
@@ -211,6 +203,7 @@ var MatSelectTableComponent = /** @class */ (function () {
      * @return {?}
      */
     function () {
+        this._onSelectOpen.complete();
         this._onDestroy.next();
         this._onDestroy.complete();
     };

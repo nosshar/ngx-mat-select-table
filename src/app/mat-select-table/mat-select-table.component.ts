@@ -139,6 +139,8 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
   /** Subject that emits when the component has been destroyed. */
   private _onDestroy = new Subject<void>();
 
+  private _onSelectOpen = new Subject<void>();
+
   private _onOptionsChange = new Subject<void>();
 
   constructor(private cd: ChangeDetectorRef) {
@@ -187,14 +189,12 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
 
         if (!this.matSelectSearchConfigurator.disableScrollToActiveOnOptionsChanged
           && !isNullOrUndefined(this.matSelect._keyManager) && this.completeRowList.length > 0) {
-          setTimeout(() => {
+          this._onSelectOpen.pipe(takeUntil(this._onDestroy), debounceTime(1), take(1)).subscribe(() => {
             const firstValue = `${this.completeRowList[0].id}`;
             for (let i = 0; i < this.tableDataSource.length; i++) {
               if (`${this.tableDataSource[i].id}` === firstValue) {
-                this.matSelect._keyManager.change.pipe(takeUntil(this._onDestroy), take(1)).subscribe(() => {
-                  this.matSelect._keyManager.setActiveItem(i);
-                  this.cd.detectChanges();
-                });
+                this.matSelect._keyManager.setActiveItem(i);
+                this.cd.detectChanges();
                 break;
               }
             }
@@ -231,6 +231,8 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
           dataClone : this.sortData(dataClone, this.sort.active, this.sort.direction);
 
         this.cd.detectChanges();
+
+        this._onSelectOpen.next();
       });
 
     // Manually sort data for this.matSelect.options (QueryList<MatOption>) and notify matSelect.options of changes
@@ -256,6 +258,7 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
   }
 
   ngOnDestroy(): void {
+    this._onSelectOpen.complete();
     this._onDestroy.next();
     this._onDestroy.complete();
   }

@@ -71,6 +71,7 @@ export declare class MatSelectTableComponent implements ControlValueAccessor, On
     private controlValueAccessorKeys;
     /** Subject that emits when the component has been destroyed. */
     private _onDestroy;
+    private _onSelectOpen;
     private _onOptionsChange;
     constructor(cd: ChangeDetectorRef);
     ngOnInit(): void;
