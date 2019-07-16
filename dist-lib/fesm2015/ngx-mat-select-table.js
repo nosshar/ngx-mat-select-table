@@ -453,6 +453,7 @@ class MatSelectTableComponent {
      */
     updateCompleteRowList(value) {
         this.completeRowList.splice(0);
+        this.completeValueList.splice(0);
         if (!isNullOrUndefined(value)) {
             /** @type {?} */
             const valueArray = !isArray(value) ? [value] : value;
@@ -471,6 +472,7 @@ class MatSelectTableComponent {
                     return;
                 }
                 this.completeRowList.push(rowFound);
+                this.completeValueList.push(rowFound.id);
             }));
         }
     }

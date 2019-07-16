@@ -508,6 +508,7 @@ var MatSelectTableComponent = /** @class */ (function () {
     function (value) {
         var _this = this;
         this.completeRowList.splice(0);
+        this.completeValueList.splice(0);
         if (!isNullOrUndefined(value)) {
             /** @type {?} */
             var valueArray = !isArray(value) ? [value] : value;
@@ -526,6 +527,7 @@ var MatSelectTableComponent = /** @class */ (function () {
                     return;
                 }
                 _this.completeRowList.push(rowFound);
+                _this.completeValueList.push(rowFound.id);
             }));
         }
     };

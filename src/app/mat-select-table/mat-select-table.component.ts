@@ -414,6 +414,7 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
 
   private updateCompleteRowList(value: any[]): void {
     this.completeRowList.splice(0);
+    this.completeValueList.splice(0);
     if (!isNullOrUndefined(value)) {
       const valueArray: any[] = !isArray(value) ? [value] : value;
       valueArray.forEach(item => {
@@ -422,6 +423,7 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
           return;
         }
         this.completeRowList.push(rowFound);
+        this.completeValueList.push(rowFound.id);
       });
     }
   }

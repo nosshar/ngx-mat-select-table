@@ -79,7 +79,7 @@ export class AppComponent implements OnInit, OnDestroy {
   defaultSort = {active: 'address' , direction: 'asc'};
 
   constructor() {
-    this.control = new FormControl(null);
+    this.control = new FormControl([3, 5, 7]);
   }
 
   ngOnInit(): void {

@@ -519,6 +519,7 @@
             function (value) {
                 var _this = this;
                 this.completeRowList.splice(0);
+                this.completeValueList.splice(0);
                 if (!util.isNullOrUndefined(value)) {
                     /** @type {?} */
                     var valueArray = !util.isArray(value) ? [value] : value;
@@ -535,6 +536,7 @@
                             return;
                         }
                         _this.completeRowList.push(rowFound);
+                        _this.completeValueList.push(rowFound.id);
                     }));
                 }
             };
