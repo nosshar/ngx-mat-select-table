@@ -77,6 +77,11 @@ $selectionCellWidth: 56px;
         }
       }
 
+      /* MatSort default sorting opacity fix */
+      th[aria-sort] ::ng-deep .mat-sort-header-arrow {
+        opacity: 1 !important;
+      }
+
       td, th {
 
         mat-option {
@@ -94,6 +99,7 @@ $selectionCellWidth: 56px;
             }
           }
         }
+
       }
     }
   }

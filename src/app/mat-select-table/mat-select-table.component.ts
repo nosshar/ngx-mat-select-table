@@ -15,13 +15,13 @@ import {
   ViewChildren
 } from '@angular/core';
 import {ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {merge, Subject, timer} from 'rxjs';
-import {MatOption, MatSelect, MatSort, MatTable, MatTableDataSource, SELECT_ITEM_HEIGHT_EM, Sort, SortDirection} from '@angular/material';
+import {merge, Subject} from 'rxjs';
+import {MatOption, MatSelect, MatSort, MatTable, MatTableDataSource, Sort, SortDirection} from '@angular/material';
 import {isArray, isNullOrUndefined, isNumber, isString} from 'util';
 import {MatSelectTableDataSource} from './MatSelectTableDataSource';
 import {MatSelectTableRow} from './MatSelectTableRow';
 import {_isNumberValue} from '@angular/cdk/coercion';
-import {debounce, debounceTime, distinctUntilChanged, take, takeUntil} from 'rxjs/operators';
+import {debounceTime, take, takeUntil} from 'rxjs/operators';
 import {MatSelectTableColumn} from './MatSelectTableColumn';
 import {MatSelectTableFilter} from './MatSelectTableFilter';
 import {MatSelectSearchComponent} from 'ngx-mat-select-search';
@@ -415,17 +415,18 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
   private updateCompleteRowList(value: any[]): void {
     this.completeRowList.splice(0);
     this.completeValueList.splice(0);
-    if (!isNullOrUndefined(value)) {
-      const valueArray: any[] = !isArray(value) ? [value] : value;
-      valueArray.forEach(item => {
-        const rowFound = this.dataSource.data.find(row => row.id === item);
-        if (rowFound === null) {
-          return;
-        }
-        this.completeRowList.push(rowFound);
-        this.completeValueList.push(rowFound.id);
-      });
+    if (isNullOrUndefined(value)) {
+      return;
     }
+    const valueArray: any[] = !isArray(value) ? [value] : value;
+    valueArray.forEach(valueId => {
+      const rowFound = this.dataSource.data.find(row => !isNullOrUndefined(row) && row.id === valueId);
+      if (rowFound === null) {
+        return;
+      }
+      this.completeRowList.push(rowFound);
+      this.completeValueList.push(rowFound.id);
+    });
   }
 
   private proxyMatSelectSearchConfiguration(configuration: { [key: string]: any }): void {
