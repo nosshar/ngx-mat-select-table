@@ -419,14 +419,15 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
       return;
     }
     const valueArray: any[] = !isArray(value) ? [value] : value;
-    valueArray.forEach(valueId => {
-      const rowFound = this.dataSource.data.find(row => !isNullOrUndefined(row) && row.id === valueId);
-      if (rowFound === null) {
-        return;
-      }
-      this.completeRowList.push(rowFound);
-      this.completeValueList.push(rowFound.id);
-    });
+    valueArray
+      .filter(valueId => !isNullOrUndefined(valueId))
+      .forEach(valueId => {
+        this.dataSource.data.filter(row => !isNullOrUndefined(row) && !isNullOrUndefined(row.id) && row.id === valueId)
+          .forEach(row => {
+            this.completeRowList.push(row);
+            this.completeValueList.push(row.id);
+          });
+      });
   }
 
   private proxyMatSelectSearchConfiguration(configuration: { [key: string]: any }): void {

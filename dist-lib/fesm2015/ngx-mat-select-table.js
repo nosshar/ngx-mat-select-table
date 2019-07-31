@@ -459,22 +459,30 @@ class MatSelectTableComponent {
         }
         /** @type {?} */
         const valueArray = !isArray(value) ? [value] : value;
-        valueArray.forEach((/**
+        valueArray
+            .filter((/**
+         * @param {?} valueId
+         * @return {?}
+         */
+        valueId => !isNullOrUndefined(valueId)))
+            .forEach((/**
          * @param {?} valueId
          * @return {?}
          */
         valueId => {
-            /** @type {?} */
-            const rowFound = this.dataSource.data.find((/**
+            this.dataSource.data.filter((/**
              * @param {?} row
              * @return {?}
              */
-            row => !isNullOrUndefined(row) && row.id === valueId));
-            if (rowFound === null) {
-                return;
-            }
-            this.completeRowList.push(rowFound);
-            this.completeValueList.push(rowFound.id);
+            row => !isNullOrUndefined(row) && !isNullOrUndefined(row.id) && row.id === valueId))
+                .forEach((/**
+             * @param {?} row
+             * @return {?}
+             */
+            row => {
+                this.completeRowList.push(row);
+                this.completeValueList.push(row.id);
+            }));
         }));
     }
     /**

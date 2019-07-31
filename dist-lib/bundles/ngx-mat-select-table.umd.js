@@ -525,20 +525,26 @@
                 }
                 /** @type {?} */
                 var valueArray = !util.isArray(value) ? [value] : value;
-                valueArray.forEach(( /**
-                 * @param {?} valueId
-                 * @return {?}
-                 */function (valueId) {
-                    /** @type {?} */
-                    var rowFound = _this.dataSource.data.find(( /**
+                valueArray
+                    .filter(( /**
+             * @param {?} valueId
+             * @return {?}
+             */function (valueId) { return !util.isNullOrUndefined(valueId); }))
+                    .forEach(( /**
+             * @param {?} valueId
+             * @return {?}
+             */function (valueId) {
+                    _this.dataSource.data.filter(( /**
                      * @param {?} row
                      * @return {?}
-                     */function (row) { return !util.isNullOrUndefined(row) && row.id === valueId; }));
-                    if (rowFound === null) {
-                        return;
-                    }
-                    _this.completeRowList.push(rowFound);
-                    _this.completeValueList.push(rowFound.id);
+                     */function (row) { return !util.isNullOrUndefined(row) && !util.isNullOrUndefined(row.id) && row.id === valueId; }))
+                        .forEach(( /**
+                 * @param {?} row
+                 * @return {?}
+                 */function (row) {
+                        _this.completeRowList.push(row);
+                        _this.completeValueList.push(row.id);
+                    }));
                 }));
             };
         /**

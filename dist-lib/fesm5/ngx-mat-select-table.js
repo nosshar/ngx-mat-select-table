@@ -514,22 +514,30 @@ var MatSelectTableComponent = /** @class */ (function () {
         }
         /** @type {?} */
         var valueArray = !isArray(value) ? [value] : value;
-        valueArray.forEach((/**
+        valueArray
+            .filter((/**
+         * @param {?} valueId
+         * @return {?}
+         */
+        function (valueId) { return !isNullOrUndefined(valueId); }))
+            .forEach((/**
          * @param {?} valueId
          * @return {?}
          */
         function (valueId) {
-            /** @type {?} */
-            var rowFound = _this.dataSource.data.find((/**
+            _this.dataSource.data.filter((/**
              * @param {?} row
              * @return {?}
              */
-            function (row) { return !isNullOrUndefined(row) && row.id === valueId; }));
-            if (rowFound === null) {
-                return;
-            }
-            _this.completeRowList.push(rowFound);
-            _this.completeValueList.push(rowFound.id);
+            function (row) { return !isNullOrUndefined(row) && !isNullOrUndefined(row.id) && row.id === valueId; }))
+                .forEach((/**
+             * @param {?} row
+             * @return {?}
+             */
+            function (row) {
+                _this.completeRowList.push(row);
+                _this.completeValueList.push(row.id);
+            }));
         }));
     };
     /**
