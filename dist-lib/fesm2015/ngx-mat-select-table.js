@@ -118,6 +118,7 @@ class MatSelectTableComponent {
      */
     ngAfterViewInit() {
         merge(...[
+            this._onOptionsChange,
             this.sort.sortChange,
             this.filterControls.valueChanges,
             this.overallFilterControl.valueChanges

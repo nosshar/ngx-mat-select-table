@@ -160,6 +160,7 @@
             function () {
                 var _this = this;
                 rxjs.merge.apply(void 0, __spread([
+                    this._onOptionsChange,
                     this.sort.sortChange,
                     this.filterControls.valueChanges,
                     this.overallFilterControl.valueChanges

@@ -205,6 +205,7 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
 
   ngAfterViewInit(): void {
     merge(...[
+      this._onOptionsChange,
       this.sort.sortChange,
       this.filterControls.valueChanges,
       this.overallFilterControl.valueChanges
