@@ -105,7 +105,11 @@ class MatSelectTableComponent {
                     for (let i = 0; i < this.tableDataSource.length; i++) {
                         if (`${this.tableDataSource[i].id}` === firstValue) {
                             this.matSelect._keyManager.setActiveItem(i);
-                            this.cd.detectChanges();
+                            try {
+                                this.cd.detectChanges();
+                            }
+                            catch (ignored) {
+                            }
                             break;
                         }
                     }
@@ -145,7 +149,11 @@ class MatSelectTableComponent {
             // Apply default or manual sorting
             this.tableDataSource = !this.sort.active ?
                 dataClone : this.sortData(dataClone, this.sort.active, this.sort.direction);
-            this.cd.detectChanges();
+            try {
+                this.cd.detectChanges();
+            }
+            catch (ignored) {
+            }
             this._onSelectOpen.next();
         }));
         // Manually sort data for this.matSelect.options (QueryList<MatOption>) and notify matSelect.options of changes

@@ -107,7 +107,11 @@ var MatSelectTableComponent = /** @class */ (function () {
                     for (var i = 0; i < _this.tableDataSource.length; i++) {
                         if ("" + _this.tableDataSource[i].id === firstValue) {
                             _this.matSelect._keyManager.setActiveItem(i);
-                            _this.cd.detectChanges();
+                            try {
+                                _this.cd.detectChanges();
+                            }
+                            catch (ignored) {
+                            }
                             break;
                         }
                     }
@@ -150,7 +154,11 @@ var MatSelectTableComponent = /** @class */ (function () {
             // Apply default or manual sorting
             _this.tableDataSource = !_this.sort.active ?
                 dataClone : _this.sortData(dataClone, _this.sort.active, _this.sort.direction);
-            _this.cd.detectChanges();
+            try {
+                _this.cd.detectChanges();
+            }
+            catch (ignored) {
+            }
             _this._onSelectOpen.next();
         }));
         // Manually sort data for this.matSelect.options (QueryList<MatOption>) and notify matSelect.options of changes
