@@ -3,12 +3,12 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef,
+  ElementRef, EventEmitter,
   forwardRef,
   Input,
   OnChanges,
   OnDestroy,
-  OnInit,
+  OnInit, Output,
   QueryList,
   SimpleChanges,
   ViewChild,
@@ -95,6 +95,8 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
    */
   @Input() defaultSort: Sort;
 
+  @Output() close: EventEmitter<boolean> = new EventEmitter();
+
   @ViewChild('componentSelect') private matSelect: MatSelect;
 
   @ViewChild(MatSelectSearchComponent) private matSelectSearch: MatSelectSearchComponent;
@@ -162,6 +164,7 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
           this.sort.sort({id: '', start: 'asc', disableClear: false});
         }
         if (!opened) {
+          this.close.emit(!opened);
           return;
         }
         if (this.overallSearchEnabled) {
