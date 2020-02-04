@@ -26,7 +26,7 @@
            matSort
            [dataSource]="tableDataSource">
 
-      <ng-container *ngFor="let columnKey of tableColumns"
+      <ng-container *ngFor="let columnKey of tableColumns; let i = index"
                     [matColumnDef]="columnKey"
                     [ngSwitch]="columnKey">
 
@@ -51,7 +51,12 @@
               <div *ngSwitchDefault>{{tableColumnsMap.get(columnKey).name}}</div>
             </ng-container>
           </th>
-          <td mat-cell *matCellDef="let row">{{row[columnKey]}}</td>
+          <td mat-cell *matCellDef="let row"
+              [colSpan]="addNullRow() && row.id === null && i === 1 ? tableColumns.length : 1"
+              [ngStyle]="{display: addNullRow() && row.id === null && i !== 1 ? 'none' : ''}"
+          >
+            {{addNullRow() && row.id === null && i === 1 ? labelForNullValue : row[columnKey]}}
+          </td>
         </ng-container>
 
       </ng-container>

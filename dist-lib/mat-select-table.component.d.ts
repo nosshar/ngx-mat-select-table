@@ -31,6 +31,8 @@ export declare class MatSelectTableComponent implements ControlValueAccessor, On
      * Example: ${name} ${id} - ${address}
      */
     customTriggerLabelTemplate: string;
+    labelForNullValue: string;
+    private nullRow;
     /**
      * {@see MatSelect} proxy inputs configurator
      * {@see MatSelect#multiple} gets value from {@see MatSelectTableComponent#multiple}
@@ -101,4 +103,5 @@ export declare class MatSelectTableComponent implements ControlValueAccessor, On
      */
     private sortingDataAccessor;
     private sortData;
+    addNullRow(): boolean;
 }

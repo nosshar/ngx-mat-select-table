@@ -20,6 +20,7 @@ class MatSelectTableComponent {
      */
     constructor(cd) {
         this.cd = cd;
+        this.nullRow = { id: null };
         this.close = new EventEmitter();
         this.completeRowList = [];
         this.completeValueList = [];
@@ -136,6 +137,9 @@ class MatSelectTableComponent {
         () => {
             /** @type {?} */
             const dataClone = [...this.dataSource.data];
+            if (this.addNullRow()) {
+                dataClone.unshift(this.nullRow);
+            }
             // Apply filtering
             if (this.overallSearchEnabled && this.overallSearchVisibleState) {
                 this.applyOverallFilter(dataClone);
@@ -345,6 +349,9 @@ class MatSelectTableComponent {
             && !isNullOrUndefined(changes.dataSource.currentValue)
             && isArray(changes.dataSource.currentValue.data)) {
             this.tableDataSource = [...changes.dataSource.currentValue.data];
+            if (this.addNullRow()) {
+                this.tableDataSource.unshift(this.nullRow);
+            }
             this.tableColumns = ['_selection', ...changes.dataSource.currentValue.columns.map((/**
                  * @param {?} column
                  * @return {?}
@@ -570,6 +577,11 @@ class MatSelectTableComponent {
                 /** @type {?} */
                 const cellValue = row[filterKey];
                 if (isNullOrUndefined(cellValue)) {
+                    data.splice(i, 1).forEach((/**
+                     * @param {?} item
+                     * @return {?}
+                     */
+                    item => this.filteredOutRows[`${item.id}`] = item));
                     continue;
                 }
                 /** @type {?} */
@@ -776,6 +788,12 @@ class MatSelectTableComponent {
             let aValue = this.sortingDataAccessor(a, active);
             /** @type {?} */
             let bValue = this.sortingDataAccessor(b, active);
+            if (a.id === null) {
+                return -1;
+            }
+            else if (b.id === null) {
+                return 1;
+            }
             // Both null/undefined/equal value check
             if (aValue === bValue) {
                 return 0;
@@ -811,11 +829,17 @@ class MatSelectTableComponent {
             return (aValue > bValue ? 1 : -1) * (this.sort.direction === 'asc' ? 1 : -1);
         }));
     }
+    /**
+     * @return {?}
+     */
+    addNullRow() {
+        return !this.multiple && !isNullOrUndefined(this.labelForNullValue);
+    }
 }
 MatSelectTableComponent.decorators = [
     { type: Component, args: [{
                 selector: 'ngx-mat-select-table',
-                template: "<mat-form-field>\n  <mat-select #componentSelect\n              [multiple]=\"multiple\"\n              disableRipple>\n\n    <mat-select-trigger>\n      <ng-container *ngIf=\"!customTriggerLabelFn\">{{simpleTriggerLabelFn(completeRowList)}}</ng-container>\n      <ng-container *ngIf=\"customTriggerLabelFn\">{{customTriggerLabelFn(completeRowList)}}</ng-container>\n    </mat-select-trigger>\n\n    <ngx-mat-select-search *ngIf=\"overallSearchEnabled\"\n                           [formControl]=\"overallFilterControl\"\n                           [clearSearchInput]=\"resetFiltersOnOpen\"\n                           [ngClass]=\"{hidden: overallSearchVisibleState !== true}\">\n      <mat-icon *ngIf=\"matSelectSearchConfigurator?.clearIcon\"\n                ngxMatSelectSearchClear\n                color=\"primary\">{{matSelectSearchConfigurator.clearIcon}}</mat-icon>\n    </ngx-mat-select-search>\n    <mat-icon *ngIf=\"overallSearchEnabled\"\n              (click)=\"toggleOverallSearch()\"\n              class=\"overall-search-toggle\"\n              color=\"primary\">{{overallSearchVisibleState ? 'arrow_back' : 'search'}}</mat-icon>\n\n    <table #table\n           mat-table\n           matSort\n           [dataSource]=\"tableDataSource\">\n\n      <ng-container *ngFor=\"let columnKey of tableColumns\"\n                    [matColumnDef]=\"columnKey\"\n                    [ngSwitch]=\"columnKey\">\n\n        <ng-container *ngSwitchCase=\"'_selection'\">\n          <th mat-header-cell *matHeaderCellDef [ngClass]=\"{selection: true, hidden: !multiple}\"></th>\n          <td mat-cell *matCellDef=\"let row\" [ngClass]=\"{selection: true, hidden: !multiple}\">\n            <mat-option [value]=\"row.id\"></mat-option>\n          </td>\n        </ng-container>\n\n        <ng-container *ngSwitchDefault>\n          <th mat-header-cell\n              mat-sort-header\n              [disabled]=\"!tableColumnsMap.get(columnKey).sortable\"\n              *matHeaderCellDef>\n            <!-- Header cell -->\n            <ng-container [ngSwitch]=\"tableColumnsMap.get(columnKey).filter?.type\">\n              <ng-container *ngSwitchCase=\"'string'\"\n                            [ngTemplateOutlet]=\"filterTypeString\"\n                            [ngTemplateOutletContext]=\"{column: tableColumnsMap.get(columnKey)}\"></ng-container>\n\n              <div *ngSwitchDefault>{{tableColumnsMap.get(columnKey).name}}</div>\n            </ng-container>\n          </th>\n          <td mat-cell *matCellDef=\"let row\">{{row[columnKey]}}</td>\n        </ng-container>\n\n      </ng-container>\n\n      <tr mat-header-row *matHeaderRowDef=\"tableColumns; sticky: true\"></tr>\n      <tr mat-row *matRowDef=\"let row; columns: tableColumns; let i = index\"\n          (click)=\"emulateMatOptionClick($event)\"\n          [ngClass]=\"{active: i === tableActiveRow}\"></tr>\n    </table>\n\n  </mat-select>\n</mat-form-field>\n\n<ng-template #filterTypeString\n             let-column='column'>\n  <mat-form-field\n    (click)=\"$event.stopPropagation()\"\n    class=\"filter\">\n    <input matInput\n           [formControl]=\"filterFormControl(column.key)\"\n           (keydown)=\"$event.stopPropagation()\"\n           (keyup)=\"$event.stopPropagation()\"\n           (keypress)=\"$event.stopPropagation()\"\n           [placeholder]=\"column.name\"/>\n  </mat-form-field>\n</ng-template>\n",
+                template: "<mat-form-field>\n  <mat-select #componentSelect\n              [multiple]=\"multiple\"\n              disableRipple>\n\n    <mat-select-trigger>\n      <ng-container *ngIf=\"!customTriggerLabelFn\">{{simpleTriggerLabelFn(completeRowList)}}</ng-container>\n      <ng-container *ngIf=\"customTriggerLabelFn\">{{customTriggerLabelFn(completeRowList)}}</ng-container>\n    </mat-select-trigger>\n\n    <ngx-mat-select-search *ngIf=\"overallSearchEnabled\"\n                           [formControl]=\"overallFilterControl\"\n                           [clearSearchInput]=\"resetFiltersOnOpen\"\n                           [ngClass]=\"{hidden: overallSearchVisibleState !== true}\">\n      <mat-icon *ngIf=\"matSelectSearchConfigurator?.clearIcon\"\n                ngxMatSelectSearchClear\n                color=\"primary\">{{matSelectSearchConfigurator.clearIcon}}</mat-icon>\n    </ngx-mat-select-search>\n    <mat-icon *ngIf=\"overallSearchEnabled\"\n              (click)=\"toggleOverallSearch()\"\n              class=\"overall-search-toggle\"\n              color=\"primary\">{{overallSearchVisibleState ? 'arrow_back' : 'search'}}</mat-icon>\n\n    <table #table\n           mat-table\n           matSort\n           [dataSource]=\"tableDataSource\">\n\n      <ng-container *ngFor=\"let columnKey of tableColumns; let i = index\"\n                    [matColumnDef]=\"columnKey\"\n                    [ngSwitch]=\"columnKey\">\n\n        <ng-container *ngSwitchCase=\"'_selection'\">\n          <th mat-header-cell *matHeaderCellDef [ngClass]=\"{selection: true, hidden: !multiple}\"></th>\n          <td mat-cell *matCellDef=\"let row\" [ngClass]=\"{selection: true, hidden: !multiple}\">\n            <mat-option [value]=\"row.id\"></mat-option>\n          </td>\n        </ng-container>\n\n        <ng-container *ngSwitchDefault>\n          <th mat-header-cell\n              mat-sort-header\n              [disabled]=\"!tableColumnsMap.get(columnKey).sortable\"\n              *matHeaderCellDef>\n            <!-- Header cell -->\n            <ng-container [ngSwitch]=\"tableColumnsMap.get(columnKey).filter?.type\">\n              <ng-container *ngSwitchCase=\"'string'\"\n                            [ngTemplateOutlet]=\"filterTypeString\"\n                            [ngTemplateOutletContext]=\"{column: tableColumnsMap.get(columnKey)}\"></ng-container>\n\n              <div *ngSwitchDefault>{{tableColumnsMap.get(columnKey).name}}</div>\n            </ng-container>\n          </th>\n          <td mat-cell *matCellDef=\"let row\"\n              [colSpan]=\"addNullRow() && row.id === null && i === 1 ? tableColumns.length : 1\"\n              [ngStyle]=\"{display: addNullRow() && row.id === null && i !== 1 ? 'none' : ''}\"\n          >\n            {{addNullRow() && row.id === null && i === 1 ? labelForNullValue : row[columnKey]}}\n          </td>\n        </ng-container>\n\n      </ng-container>\n\n      <tr mat-header-row *matHeaderRowDef=\"tableColumns; sticky: true\"></tr>\n      <tr mat-row *matRowDef=\"let row; columns: tableColumns; let i = index\"\n          (click)=\"emulateMatOptionClick($event)\"\n          [ngClass]=\"{active: i === tableActiveRow}\"></tr>\n    </table>\n\n  </mat-select>\n</mat-form-field>\n\n<ng-template #filterTypeString\n             let-column='column'>\n  <mat-form-field\n    (click)=\"$event.stopPropagation()\"\n    class=\"filter\">\n    <input matInput\n           [formControl]=\"filterFormControl(column.key)\"\n           (keydown)=\"$event.stopPropagation()\"\n           (keyup)=\"$event.stopPropagation()\"\n           (keypress)=\"$event.stopPropagation()\"\n           [placeholder]=\"column.name\"/>\n  </mat-form-field>\n</ng-template>\n",
                 exportAs: 'ngx-mat-select-table',
                 changeDetection: ChangeDetectionStrategy.OnPush,
                 providers: [
@@ -844,6 +868,7 @@ MatSelectTableComponent.propDecorators = {
     resetFiltersOnOpen: [{ type: Input }],
     customTriggerLabelFn: [{ type: Input }],
     customTriggerLabelTemplate: [{ type: Input }],
+    labelForNullValue: [{ type: Input }],
     matSelectConfigurator: [{ type: Input }],
     matSelectSearchConfigurator: [{ type: Input }],
     defaultSort: [{ type: Input }],

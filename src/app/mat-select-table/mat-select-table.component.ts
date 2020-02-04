@@ -77,6 +77,9 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
    */
   @Input() customTriggerLabelTemplate: string;
 
+  @Input() labelForNullValue: string;
+  private nullRow: MatSelectTableRow = {id: null};
+
   /**
    * {@see MatSelect} proxy inputs configurator
    * {@see MatSelect#multiple} gets value from {@see MatSelectTableComponent#multiple}
@@ -219,6 +222,9 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
       .pipe(takeUntil(this._onDestroy), debounceTime(100))
       .subscribe(() => {
         const dataClone: MatSelectTableRow[] = [...this.dataSource.data];
+        if (this.addNullRow()) {
+          dataClone.unshift(this.nullRow);
+        }
 
         // Apply filtering
         if (this.overallSearchEnabled && this.overallSearchVisibleState) {
@@ -353,6 +359,9 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
       && !isNullOrUndefined(changes.dataSource.currentValue)
       && isArray(changes.dataSource.currentValue.data)) {
       this.tableDataSource = [...changes.dataSource.currentValue.data];
+      if (this.addNullRow()) {
+        this.tableDataSource.unshift(this.nullRow);
+      }
       this.tableColumns = ['_selection', ...changes.dataSource.currentValue.columns.map(column => column.key)];
       this.tableColumnsMap.clear();
       changes.dataSource.currentValue.columns.forEach(column => this.tableColumnsMap.set(column.key, column));
@@ -480,6 +489,7 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
         const row: MatSelectTableRow = data[i];
         const cellValue: any = row[filterKey];
         if (isNullOrUndefined(cellValue)) {
+          data.splice(i, 1).forEach(item => this.filteredOutRows[`${item.id}`] = item);
           continue;
         }
         const filter = filters[filterKey];
@@ -605,6 +615,12 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
       let aValue = this.sortingDataAccessor(a, active);
       let bValue = this.sortingDataAccessor(b, active);
 
+      if (a.id === null) {
+        return -1;
+      } else if (b.id === null) {
+        return 1;
+      }
+
       // Both null/undefined/equal value check
       if (aValue === bValue) {
         return 0;
@@ -646,4 +662,7 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
     });
   }
 
+  addNullRow(): boolean {
+    return !this.multiple && !isNullOrUndefined(this.labelForNullValue);
+  }
 }
