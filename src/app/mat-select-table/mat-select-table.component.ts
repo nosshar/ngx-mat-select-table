@@ -294,7 +294,7 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
         this.matSelect.value = this.completeValueList;
         fn(this.completeValueList);
         this.completeRowList.splice(0);
-        this.dataSource.data
+        ((this.dataSource || {data: []}).data || [])
           .filter(row => this.completeValueList.indexOf(row.id) !== -1)
           .forEach(row => this.completeRowList.push(row));
       } else {
