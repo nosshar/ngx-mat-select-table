@@ -221,7 +221,7 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
     ])
       .pipe(takeUntil(this._onDestroy), debounceTime(100))
       .subscribe(() => {
-        const dataClone: MatSelectTableRow[] = [...this.dataSource.data];
+        const dataClone: MatSelectTableRow[] = [...((this.dataSource || {data: []}).data || [])];
         if (this.addNullRow()) {
           dataClone.unshift(this.nullRow);
         }
@@ -300,7 +300,7 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
       } else {
         fn(value);
         this.completeRowList.splice(0);
-        this.dataSource.data
+        ((this.dataSource || {data: []}).data || [])
           .filter(row => row.id === value)
           .forEach(row => this.completeRowList.push(row));
       }
@@ -441,7 +441,8 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
     valueArray
       .filter(valueId => !isNullOrUndefined(valueId))
       .forEach(valueId => {
-        this.dataSource.data.filter(row => !isNullOrUndefined(row) && !isNullOrUndefined(row.id) && row.id === valueId)
+        ((this.dataSource || {data: []}).data || [])
+          .filter(row => !isNullOrUndefined(row) && !isNullOrUndefined(row.id) && row.id === valueId)
           .forEach(row => {
             this.completeRowList.push(row);
             this.completeValueList.push(row.id);

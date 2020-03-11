@@ -141,7 +141,7 @@ var MatSelectTableComponent = /** @class */ (function () {
          */
         function () {
             /** @type {?} */
-            var dataClone = __spread(_this.dataSource.data);
+            var dataClone = __spread(((_this.dataSource || { data: [] }).data || []));
             if (_this.addNullRow()) {
                 dataClone.unshift(_this.nullRow);
             }
@@ -274,7 +274,7 @@ var MatSelectTableComponent = /** @class */ (function () {
             else {
                 fn(value);
                 _this.completeRowList.splice(0);
-                _this.dataSource.data
+                ((_this.dataSource || { data: [] }).data || [])
                     .filter((/**
                  * @param {?} row
                  * @return {?}
@@ -543,7 +543,8 @@ var MatSelectTableComponent = /** @class */ (function () {
          * @return {?}
          */
         function (valueId) {
-            _this.dataSource.data.filter((/**
+            ((_this.dataSource || { data: [] }).data || [])
+                .filter((/**
              * @param {?} row
              * @return {?}
              */

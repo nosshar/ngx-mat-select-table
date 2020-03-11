@@ -176,7 +176,7 @@
              * @return {?}
              */function () {
                     /** @type {?} */
-                    var dataClone = __spread(_this.dataSource.data);
+                    var dataClone = __spread(((_this.dataSource || { data: [] }).data || []));
                     if (_this.addNullRow()) {
                         dataClone.unshift(_this.nullRow);
                     }
@@ -298,7 +298,7 @@
                     else {
                         fn(value);
                         _this.completeRowList.splice(0);
-                        _this.dataSource.data
+                        ((_this.dataSource || { data: [] }).data || [])
                             .filter(( /**
                      * @param {?} row
                      * @return {?}
@@ -552,10 +552,11 @@
              * @param {?} valueId
              * @return {?}
              */function (valueId) {
-                    _this.dataSource.data.filter(( /**
-                     * @param {?} row
-                     * @return {?}
-                     */function (row) { return !util.isNullOrUndefined(row) && !util.isNullOrUndefined(row.id) && row.id === valueId; }))
+                    ((_this.dataSource || { data: [] }).data || [])
+                        .filter(( /**
+                 * @param {?} row
+                 * @return {?}
+                 */function (row) { return !util.isNullOrUndefined(row) && !util.isNullOrUndefined(row.id) && row.id === valueId; }))
                         .forEach(( /**
                  * @param {?} row
                  * @return {?}

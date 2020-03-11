@@ -136,7 +136,7 @@ class MatSelectTableComponent {
          */
         () => {
             /** @type {?} */
-            const dataClone = [...this.dataSource.data];
+            const dataClone = [...((this.dataSource || { data: [] }).data || [])];
             if (this.addNullRow()) {
                 dataClone.unshift(this.nullRow);
             }
@@ -261,7 +261,7 @@ class MatSelectTableComponent {
             else {
                 fn(value);
                 this.completeRowList.splice(0);
-                this.dataSource.data
+                ((this.dataSource || { data: [] }).data || [])
                     .filter((/**
                  * @param {?} row
                  * @return {?}
@@ -488,7 +488,8 @@ class MatSelectTableComponent {
          * @return {?}
          */
         valueId => {
-            this.dataSource.data.filter((/**
+            ((this.dataSource || { data: [] }).data || [])
+                .filter((/**
              * @param {?} row
              * @return {?}
              */
