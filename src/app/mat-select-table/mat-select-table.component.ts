@@ -71,6 +71,11 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
   @Input() customTriggerLabelFn: (value: MatSelectTableRow[]) => string;
 
   /**
+   * Sort option for values in the customTriggerLabelFn in Multiple mode.
+    */
+  @Input() triggerLabelSort: Sort;
+
+  /**
    * Template to customize the default trigger label. Has lesser priority than {@see MatSelectTableComponent#customTriggerLabelFn}.
    * Substitution is case sensitive.
    * Example: ${name} ${id} - ${address}
@@ -404,6 +409,9 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
   }
 
   simpleTriggerLabelFn(value: MatSelectTableRow[]): string {
+    if (!isNullOrUndefined(this.triggerLabelSort)) {
+      this.sortData(value, this.triggerLabelSort.active, this.triggerLabelSort.direction);
+    }
     return value.map(row => {
       if (isNullOrUndefined(row)) {
         return '';

@@ -26,6 +26,10 @@ export declare class MatSelectTableComponent implements ControlValueAccessor, On
      */
     customTriggerLabelFn: (value: MatSelectTableRow[]) => string;
     /**
+     * Sort option for values in the customTriggerLabelFn in Multiple mode.
+      */
+    triggerLabelSort: Sort;
+    /**
      * Template to customize the default trigger label. Has lesser priority than {@see MatSelectTableComponent#customTriggerLabelFn}.
      * Substitution is case sensitive.
      * Example: ${name} ${id} - ${address}

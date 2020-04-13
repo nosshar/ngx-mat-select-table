@@ -480,6 +480,9 @@
          */
             function (value) {
                 var _this = this;
+                if (!util.isNullOrUndefined(this.triggerLabelSort)) {
+                    this.sortData(value, this.triggerLabelSort.active, this.triggerLabelSort.direction);
+                }
                 return value.map(( /**
                  * @param {?} row
                  * @return {?}
@@ -970,6 +973,7 @@
             resetSortOnOpen: [{ type: core.Input }],
             resetFiltersOnOpen: [{ type: core.Input }],
             customTriggerLabelFn: [{ type: core.Input }],
+            triggerLabelSort: [{ type: core.Input }],
             customTriggerLabelTemplate: [{ type: core.Input }],
             labelForNullValue: [{ type: core.Input }],
             matSelectConfigurator: [{ type: core.Input }],

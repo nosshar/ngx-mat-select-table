@@ -423,6 +423,9 @@ class MatSelectTableComponent {
      * @return {?}
      */
     simpleTriggerLabelFn(value) {
+        if (!isNullOrUndefined(this.triggerLabelSort)) {
+            this.sortData(value, this.triggerLabelSort.active, this.triggerLabelSort.direction);
+        }
         return value.map((/**
          * @param {?} row
          * @return {?}
@@ -868,6 +871,7 @@ MatSelectTableComponent.propDecorators = {
     resetSortOnOpen: [{ type: Input }],
     resetFiltersOnOpen: [{ type: Input }],
     customTriggerLabelFn: [{ type: Input }],
+    triggerLabelSort: [{ type: Input }],
     customTriggerLabelTemplate: [{ type: Input }],
     labelForNullValue: [{ type: Input }],
     matSelectConfigurator: [{ type: Input }],

@@ -466,6 +466,9 @@ var MatSelectTableComponent = /** @class */ (function () {
      */
     function (value) {
         var _this = this;
+        if (!isNullOrUndefined(this.triggerLabelSort)) {
+            this.sortData(value, this.triggerLabelSort.active, this.triggerLabelSort.direction);
+        }
         return value.map((/**
          * @param {?} row
          * @return {?}
@@ -976,6 +979,7 @@ var MatSelectTableComponent = /** @class */ (function () {
         resetSortOnOpen: [{ type: Input }],
         resetFiltersOnOpen: [{ type: Input }],
         customTriggerLabelFn: [{ type: Input }],
+        triggerLabelSort: [{ type: Input }],
         customTriggerLabelTemplate: [{ type: Input }],
         labelForNullValue: [{ type: Input }],
         matSelectConfigurator: [{ type: Input }],
