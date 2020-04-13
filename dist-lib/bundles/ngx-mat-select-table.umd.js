@@ -916,20 +916,20 @@
                     }
                     // User localeCompare for strings
                     if (util.isString(aValue) && util.isString(bValue)) {
-                        return (( /** @type {?} */(aValue))).localeCompare(( /** @type {?} */(bValue))) * (_this.sort.direction === 'asc' ? 1 : -1);
+                        return (( /** @type {?} */(aValue))).localeCompare(( /** @type {?} */(bValue))) * (direction === 'asc' ? 1 : -1);
                     }
                     // Try to convert to a Number type
                     aValue = isNaN(( /** @type {?} */(aValue))) ? "" + aValue : +aValue;
                     bValue = isNaN(( /** @type {?} */(bValue))) ? "" + bValue : +bValue;
                     // if one is number and other is String
                     if (util.isString(aValue) && util.isNumber(bValue)) {
-                        return (1) * (_this.sort.direction === 'asc' ? 1 : -1);
+                        return (1) * (direction === 'asc' ? 1 : -1);
                     }
                     if (util.isNumber(aValue) && util.isString(bValue)) {
-                        return (-1) * (_this.sort.direction === 'asc' ? 1 : -1);
+                        return (-1) * (direction === 'asc' ? 1 : -1);
                     }
                     // Compare as Numbers otherwise
-                    return (aValue > bValue ? 1 : -1) * (_this.sort.direction === 'asc' ? 1 : -1);
+                    return (aValue > bValue ? 1 : -1) * (direction === 'asc' ? 1 : -1);
                 }));
             };
         /**
