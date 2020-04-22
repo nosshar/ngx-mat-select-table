@@ -496,6 +496,9 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
       for (let k = 0; k < filterKeys.length; k++) {
         const filterKey: string = filterKeys[k];
         const row: MatSelectTableRow = data[i];
+		if (isNullOrUndefined(row)) {
+		  return;
+		}
         const cellValue: any = row[filterKey];
         if (isNullOrUndefined(cellValue)) {
           data.splice(i, 1).forEach(item => this.filteredOutRows[`${item.id}`] = item);

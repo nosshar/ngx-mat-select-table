@@ -578,6 +578,9 @@ class MatSelectTableComponent {
                 const filterKey = filterKeys[k];
                 /** @type {?} */
                 const row = data[i];
+                if (isNullOrUndefined(row)) {
+                    return;
+                }
                 /** @type {?} */
                 const cellValue = row[filterKey];
                 if (isNullOrUndefined(cellValue)) {
