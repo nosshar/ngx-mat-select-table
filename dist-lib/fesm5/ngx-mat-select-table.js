@@ -645,6 +645,9 @@ var MatSelectTableComponent = /** @class */ (function () {
                 var filterKey = filterKeys[k];
                 /** @type {?} */
                 var row = data[i];
+                if (isNullOrUndefined(row)) {
+                    continue;
+                }
                 /** @type {?} */
                 var cellValue = row[filterKey];
                 if (isNullOrUndefined(cellValue)) {
