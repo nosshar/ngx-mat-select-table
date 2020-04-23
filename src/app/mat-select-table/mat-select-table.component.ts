@@ -3,12 +3,14 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ElementRef, EventEmitter,
+  ElementRef,
+  EventEmitter,
   forwardRef,
   Input,
   OnChanges,
   OnDestroy,
-  OnInit, Output,
+  OnInit,
+  Output,
   QueryList,
   SimpleChanges,
   ViewChild,
@@ -72,7 +74,7 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
 
   /**
    * Sort option for values in the customTriggerLabelFn in Multiple mode.
-    */
+   */
   @Input() triggerLabelSort: Sort;
 
   /**
@@ -496,9 +498,9 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
       for (let k = 0; k < filterKeys.length; k++) {
         const filterKey: string = filterKeys[k];
         const row: MatSelectTableRow = data[i];
-		if (isNullOrUndefined(row)) {
-		  continue;
-		}
+        if (isNullOrUndefined(row)) {
+          continue;
+        }
         const cellValue: any = row[filterKey];
         if (isNullOrUndefined(cellValue)) {
           data.splice(i, 1).forEach(item => this.filteredOutRows[`${item.id}`] = item);
