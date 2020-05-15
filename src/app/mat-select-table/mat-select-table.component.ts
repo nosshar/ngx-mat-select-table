@@ -104,6 +104,11 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
    * Apply default sorting
    */
   @Input() defaultSort: Sort;
+  
+  /**
+   * Action for 'All' option.
+   */
+  @Input() resetOptionAction: () => void;
 
   @Output() close: EventEmitter<boolean> = new EventEmitter();
 
@@ -216,6 +221,24 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
             }
           });
         }
+      });
+	  
+	  this.matSelect.valueChange	
+      .pipe(takeUntil(this._onDestroy))	
+      .subscribe((value) => {	
+        if (!this.multiple) {	
+          return;	
+        }	
+        if (isArray(value) && value.length > 1 && value.some(v => v === '')) {	
+          this.writeValue(value.filter(v => v !== ''));	
+          try {	
+            this.cd.detectChanges();	
+          } catch (ignored) {	
+          }	
+        }	
+        if (isArray(value) && value.length === 0) {	
+          this.checkAndResetSelection();	
+        }	
       });
   }
 
@@ -674,9 +697,17 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
       // Compare as Numbers otherwise
       return (aValue > bValue ? 1 : -1) * (direction === 'asc' ? 1 : -1);
     });
+	
   }
 
   addNullRow(): boolean {
     return !this.multiple && !isNullOrUndefined(this.labelForNullValue);
+  }
+  
+  private checkAndResetSelection() {	
+    if (this.matSelect.value && isArray(this.matSelect.value) && this.matSelect.value.length < 1	
+      && !isNullOrUndefined(this.resetOptionAction)) {	
+      this.resetOptionAction();	
+    }	
   }
 }

@@ -27,7 +27,7 @@ export declare class MatSelectTableComponent implements ControlValueAccessor, On
     customTriggerLabelFn: (value: MatSelectTableRow[]) => string;
     /**
      * Sort option for values in the customTriggerLabelFn in Multiple mode.
-      */
+     */
     triggerLabelSort: Sort;
     /**
      * Template to customize the default trigger label. Has lesser priority than {@see MatSelectTableComponent#customTriggerLabelFn}.
@@ -56,6 +56,10 @@ export declare class MatSelectTableComponent implements ControlValueAccessor, On
      * Apply default sorting
      */
     defaultSort: Sort;
+    /**
+     * Action for 'All' option.
+     */
+    resetOptionAction: () => void;
     close: EventEmitter<boolean>;
     private matSelect;
     private matSelectSearch;
@@ -108,4 +112,5 @@ export declare class MatSelectTableComponent implements ControlValueAccessor, On
     private sortingDataAccessor;
     private sortData;
     addNullRow(): boolean;
+    private checkAndResetSelection;
 }

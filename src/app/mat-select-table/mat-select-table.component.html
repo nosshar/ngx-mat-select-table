@@ -33,7 +33,7 @@
         <ng-container *ngSwitchCase="'_selection'">
           <th mat-header-cell *matHeaderCellDef [ngClass]="{selection: true, hidden: !multiple}"></th>
           <td mat-cell *matCellDef="let row" [ngClass]="{selection: true, hidden: !multiple}">
-            <mat-option [value]="row.id"></mat-option>
+            <mat-option [value]="row.id" (click)="row.id === '' && resetOptionAction ? resetOptionAction() : null"></mat-option>
           </td>
         </ng-container>
 
