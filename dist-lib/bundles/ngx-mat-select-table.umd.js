@@ -1,8 +1,8 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('rxjs'), require('util'), require('@angular/cdk/coercion'), require('rxjs/operators'), require('@angular/core'), require('@angular/common'), require('ngx-mat-select-search'), require('@angular/material'), require('@angular/forms')) :
-    typeof define === 'function' && define.amd ? define('ngx-mat-select-table', ['exports', 'rxjs', 'util', '@angular/cdk/coercion', 'rxjs/operators', '@angular/core', '@angular/common', 'ngx-mat-select-search', '@angular/material', '@angular/forms'], factory) :
-    (factory((global['ngx-mat-select-table'] = {}),global.rxjs,global.util,global.ng.cdk.coercion,global.rxjs.operators,global.ng.core,global.ng.common,global.ngxMatSelectSearch,global.ng.material,global.ng.forms));
-}(this, (function (exports,rxjs,util,coercion,operators,core,common,ngxMatSelectSearch,material,forms) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('rxjs'), require('util'), require('@angular/cdk/coercion'), require('rxjs/operators'), require('@angular/common'), require('ngx-mat-select-search'), require('@angular/material'), require('@angular/forms'), require('@angular/core')) :
+    typeof define === 'function' && define.amd ? define('ngx-mat-select-table', ['exports', 'rxjs', 'util', '@angular/cdk/coercion', 'rxjs/operators', '@angular/common', 'ngx-mat-select-search', '@angular/material', '@angular/forms', '@angular/core'], factory) :
+    (factory((global['ngx-mat-select-table'] = {}),global.rxjs,global.util,global.ng.cdk.coercion,global.rxjs.operators,global.ng.common,global.ngxMatSelectSearch,global.ng.material,global.ng.forms,global.ng.core));
+}(this, (function (exports,rxjs,util,coercion,operators,common,ngxMatSelectSearch,material,forms,core) { 'use strict';
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation. All rights reserved.
@@ -988,7 +988,7 @@
         MatSelectTableComponent.decorators = [
             { type: core.Component, args: [{
                         selector: 'ngx-mat-select-table',
-                        template: "<mat-form-field>\r\n  <mat-select #componentSelect\r\n              [multiple]=\"multiple\"\r\n              disableRipple>\r\n\r\n    <mat-select-trigger>\r\n      <ng-container *ngIf=\"!customTriggerLabelFn\">{{simpleTriggerLabelFn(completeRowList)}}</ng-container>\r\n      <ng-container *ngIf=\"customTriggerLabelFn\">{{customTriggerLabelFn(completeRowList)}}</ng-container>\r\n    </mat-select-trigger>\r\n\r\n    <ngx-mat-select-search *ngIf=\"overallSearchEnabled\"\r\n                           [formControl]=\"overallFilterControl\"\r\n                           [clearSearchInput]=\"resetFiltersOnOpen\"\r\n                           [ngClass]=\"{hidden: overallSearchVisibleState !== true}\">\r\n      <mat-icon *ngIf=\"matSelectSearchConfigurator?.clearIcon\"\r\n                ngxMatSelectSearchClear\r\n                color=\"primary\">{{matSelectSearchConfigurator.clearIcon}}</mat-icon>\r\n    </ngx-mat-select-search>\r\n    <mat-icon *ngIf=\"overallSearchEnabled\"\r\n              (click)=\"toggleOverallSearch()\"\r\n              class=\"overall-search-toggle\"\r\n              color=\"primary\">{{overallSearchVisibleState ? 'arrow_back' : 'search'}}</mat-icon>\r\n\r\n    <table #table\r\n           mat-table\r\n           matSort\r\n           [dataSource]=\"tableDataSource\">\r\n\r\n      <ng-container *ngFor=\"let columnKey of tableColumns; let i = index\"\r\n                    [matColumnDef]=\"columnKey\"\r\n                    [ngSwitch]=\"columnKey\">\r\n\r\n        <ng-container *ngSwitchCase=\"'_selection'\">\r\n          <th mat-header-cell *matHeaderCellDef [ngClass]=\"{selection: true, hidden: !multiple}\"></th>\r\n          <td mat-cell *matCellDef=\"let row\" [ngClass]=\"{selection: true, hidden: !multiple}\">\r\n\t\t\t<mat-option [value]=\"row.id\" (click)=\"row.id === '' && resetOptionAction ? resetOptionAction() : null\"></mat-option>\r\n          </td>\r\n        </ng-container>\r\n\r\n        <ng-container *ngSwitchDefault>\r\n          <th mat-header-cell\r\n              mat-sort-header\r\n              [disabled]=\"!tableColumnsMap.get(columnKey).sortable\"\r\n              *matHeaderCellDef>\r\n            <!-- Header cell -->\r\n            <ng-container [ngSwitch]=\"tableColumnsMap.get(columnKey).filter?.type\">\r\n              <ng-container *ngSwitchCase=\"'string'\"\r\n                            [ngTemplateOutlet]=\"filterTypeString\"\r\n                            [ngTemplateOutletContext]=\"{column: tableColumnsMap.get(columnKey)}\"></ng-container>\r\n\r\n              <div *ngSwitchDefault>{{tableColumnsMap.get(columnKey).name}}</div>\r\n            </ng-container>\r\n          </th>\r\n          <td mat-cell *matCellDef=\"let row\"\r\n              [colSpan]=\"addNullRow() && row.id === null && i === 1 ? tableColumns.length : 1\"\r\n              [ngStyle]=\"{display: addNullRow() && row.id === null && i !== 1 ? 'none' : ''}\"\r\n          >\r\n            {{addNullRow() && row.id === null && i === 1 ? labelForNullValue : row[columnKey]}}\r\n          </td>\r\n        </ng-container>\r\n\r\n      </ng-container>\r\n\r\n      <tr mat-header-row *matHeaderRowDef=\"tableColumns; sticky: true\"></tr>\r\n      <tr mat-row *matRowDef=\"let row; columns: tableColumns; let i = index\"\r\n          (click)=\"emulateMatOptionClick($event)\"\r\n          [ngClass]=\"{active: i === tableActiveRow}\"></tr>\r\n    </table>\r\n\r\n  </mat-select>\r\n</mat-form-field>\r\n\r\n<ng-template #filterTypeString\r\n             let-column='column'>\r\n  <mat-form-field\r\n    (click)=\"$event.stopPropagation()\"\r\n    class=\"filter\">\r\n    <input matInput\r\n           [formControl]=\"filterFormControl(column.key)\"\r\n           (keydown)=\"$event.stopPropagation()\"\r\n           (keyup)=\"$event.stopPropagation()\"\r\n           (keypress)=\"$event.stopPropagation()\"\r\n           [placeholder]=\"column.name\"/>\r\n  </mat-form-field>\r\n</ng-template>\r\n",
+                        template: "<mat-form-field>\n  <mat-select #componentSelect\n              [multiple]=\"multiple\"\n              disableRipple>\n\n    <mat-select-trigger>\n      <ng-container *ngIf=\"!customTriggerLabelFn\">{{simpleTriggerLabelFn(completeRowList)}}</ng-container>\n      <ng-container *ngIf=\"customTriggerLabelFn\">{{customTriggerLabelFn(completeRowList)}}</ng-container>\n    </mat-select-trigger>\n\n    <ngx-mat-select-search *ngIf=\"overallSearchEnabled\"\n                           [formControl]=\"overallFilterControl\"\n                           [clearSearchInput]=\"resetFiltersOnOpen\"\n                           [ngClass]=\"{hidden: overallSearchVisibleState !== true}\">\n      <mat-icon *ngIf=\"matSelectSearchConfigurator?.clearIcon\"\n                ngxMatSelectSearchClear\n                color=\"primary\">{{matSelectSearchConfigurator.clearIcon}}</mat-icon>\n    </ngx-mat-select-search>\n    <mat-icon *ngIf=\"overallSearchEnabled\"\n              (click)=\"toggleOverallSearch()\"\n              class=\"overall-search-toggle\"\n              color=\"primary\">{{overallSearchVisibleState ? 'arrow_back' : 'search'}}</mat-icon>\n\n    <table #table\n           mat-table\n           matSort\n           [dataSource]=\"tableDataSource\">\n\n      <ng-container *ngFor=\"let columnKey of tableColumns; let i = index\"\n                    [matColumnDef]=\"columnKey\"\n                    [ngSwitch]=\"columnKey\">\n\n        <ng-container *ngSwitchCase=\"'_selection'\">\n          <th mat-header-cell *matHeaderCellDef [ngClass]=\"{selection: true, hidden: !multiple}\"></th>\n          <td mat-cell *matCellDef=\"let row\" [ngClass]=\"{selection: true, hidden: !multiple}\">\n            <mat-option [value]=\"row.id\" (click)=\"row.id === '' && resetOptionAction ? resetOptionAction() : null\"></mat-option>\n          </td>\n        </ng-container>\n\n        <ng-container *ngSwitchDefault>\n          <th mat-header-cell\n              mat-sort-header\n              [disabled]=\"!tableColumnsMap.get(columnKey).sortable\"\n              *matHeaderCellDef>\n            <!-- Header cell -->\n            <ng-container [ngSwitch]=\"tableColumnsMap.get(columnKey).filter?.type\">\n              <ng-container *ngSwitchCase=\"'string'\"\n                            [ngTemplateOutlet]=\"filterTypeString\"\n                            [ngTemplateOutletContext]=\"{column: tableColumnsMap.get(columnKey)}\"></ng-container>\n              <ng-container *ngSwitchCase=\"'number'\"\n                            [ngTemplateOutlet]=\"filterTypeNumber\"\n                            [ngTemplateOutletContext]=\"{column: tableColumnsMap.get(columnKey)}\"></ng-container>\n              <div *ngSwitchDefault>{{tableColumnsMap.get(columnKey).name}}</div>\n            </ng-container>\n          </th>\n          <td mat-cell *matCellDef=\"let row\"\n              [colSpan]=\"addNullRow() && row.id === null && i === 1 ? tableColumns.length : 1\"\n              [ngStyle]=\"{display: addNullRow() && row.id === null && i !== 1 ? 'none' : ''}\"\n          >\n            {{addNullRow() && row.id === null && i === 1 ? labelForNullValue : row[columnKey]}}\n          </td>\n        </ng-container>\n\n      </ng-container>\n\n      <tr mat-header-row *matHeaderRowDef=\"tableColumns; sticky: true\"></tr>\n      <tr mat-row *matRowDef=\"let row; columns: tableColumns; let i = index\"\n          (click)=\"emulateMatOptionClick($event)\"\n          [ngClass]=\"{active: i === tableActiveRow}\"></tr>\n    </table>\n\n  </mat-select>\n</mat-form-field>\n\n<ng-template #filterTypeString\n             let-column='column'>\n  <mat-form-field\n    (click)=\"$event.stopPropagation()\"\n    class=\"filter\">\n    <input matInput\n           [formControl]=\"filterFormControl(column.key)\"\n           (keydown)=\"$event.stopPropagation()\"\n           (keyup)=\"$event.stopPropagation()\"\n           (keypress)=\"$event.stopPropagation()\"\n           [placeholder]=\"column.name\"/>\n  </mat-form-field>\n</ng-template>\n\n<ng-template #filterTypeNumber\n             let-column='column'>\n  <mat-form-field\n    (click)=\"$event.stopPropagation()\"\n    class=\"filter\">\n    <input matInput\n           [formControl]=\"filterFormControl(column.key)\"\n           (keydown)=\"$event.stopPropagation()\"\n           (keyup)=\"$event.stopPropagation()\"\n           (keypress)=\"$event.stopPropagation()\"\n           [placeholder]=\"column.name\"\n           type=\"number\"\n           appInputRestriction=\"integer\"/>\n  </mat-form-field>\n</ng-template>\n",
                         exportAs: 'ngx-mat-select-table',
                         changeDetection: core.ChangeDetectionStrategy.OnPush,
                         providers: [
@@ -1039,13 +1039,84 @@
      * @fileoverview added by tsickle
      * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
      */
+    var MatSelectTableInputRestrictionDirective = /** @class */ (function () {
+        function MatSelectTableInputRestrictionDirective() {
+        }
+        /**
+         * @param {?} event
+         * @return {?}
+         */
+        MatSelectTableInputRestrictionDirective.prototype.onKeyPress = /**
+         * @param {?} event
+         * @return {?}
+         */
+            function (event) {
+                if (this.appInputRestriction === 'integer') {
+                    this.integerOnly(event);
+                }
+            };
+        /**
+         * @param {?} event
+         * @return {?}
+         */
+        MatSelectTableInputRestrictionDirective.prototype.integerOnly = /**
+         * @param {?} event
+         * @return {?}
+         */
+            function (event) {
+                /** @type {?} */
+                var e = ( /** @type {?} */(event));
+                if (['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'].indexOf(e.key) === -1) {
+                    e.preventDefault();
+                }
+            };
+        /**
+         * @param {?} event
+         * @return {?}
+         */
+        MatSelectTableInputRestrictionDirective.prototype.onPaste = /**
+         * @param {?} event
+         * @return {?}
+         */
+            function (event) {
+                /** @type {?} */
+                var regex;
+                if (this.appInputRestriction === 'integer') {
+                    regex = /^[0-9]*$/;
+                }
+                /** @type {?} */
+                var e = ( /** @type {?} */(event));
+                /** @type {?} */
+                var pasteData = e.clipboardData.getData('text/plain');
+                if (!pasteData.match(regex)) {
+                    e.preventDefault();
+                }
+            };
+        MatSelectTableInputRestrictionDirective.decorators = [
+            { type: core.Directive, args: [{
+                        selector: '[appInputRestriction]'
+                    },] }
+        ];
+        MatSelectTableInputRestrictionDirective.propDecorators = {
+            appInputRestriction: [{ type: core.Input }],
+            onKeyPress: [{ type: core.HostListener, args: ['keypress', ['$event'],] }],
+            onPaste: [{ type: core.HostListener, args: ['paste', ['$event'],] }]
+        };
+        return MatSelectTableInputRestrictionDirective;
+    }());
+
+    /**
+     * @fileoverview added by tsickle
+     * @suppress {checkTypes,extraRequire,missingOverride,missingReturn,unusedPrivateMembers,uselessCode} checked by tsc
+     */
     var NgxMatSelectTableModule = /** @class */ (function () {
         function NgxMatSelectTableModule() {
         }
         NgxMatSelectTableModule.decorators = [
             { type: core.NgModule, args: [{
                         declarations: [
-                            MatSelectTableComponent
+                            MatSelectTableComponent,
+                            MatSelectTableInputRestrictionDirective
                         ],
                         imports: [
                             common.CommonModule,
@@ -1080,6 +1151,7 @@
 
     exports.MatSelectTableComponent = MatSelectTableComponent;
     exports.NgxMatSelectTableModule = NgxMatSelectTableModule;
+    exports.ɵa = MatSelectTableInputRestrictionDirective;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
