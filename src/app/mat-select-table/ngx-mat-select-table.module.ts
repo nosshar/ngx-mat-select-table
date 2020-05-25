@@ -13,10 +13,12 @@ import {
   MatTableModule
 } from '@angular/material';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatSelectTableInputRestrictionDirective} from './directives/mat-select-table-input-restriction.directive';
 
 @NgModule({
   declarations: [
-    MatSelectTableComponent
+    MatSelectTableComponent,
+    MatSelectTableInputRestrictionDirective
   ],
   imports: [
     CommonModule,

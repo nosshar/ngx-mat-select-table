@@ -47,7 +47,9 @@
               <ng-container *ngSwitchCase="'string'"
                             [ngTemplateOutlet]="filterTypeString"
                             [ngTemplateOutletContext]="{column: tableColumnsMap.get(columnKey)}"></ng-container>
-
+              <ng-container *ngSwitchCase="'number'"
+                            [ngTemplateOutlet]="filterTypeNumber"
+                            [ngTemplateOutletContext]="{column: tableColumnsMap.get(columnKey)}"></ng-container>
               <div *ngSwitchDefault>{{tableColumnsMap.get(columnKey).name}}</div>
             </ng-container>
           </th>
@@ -81,5 +83,21 @@
            (keyup)="$event.stopPropagation()"
            (keypress)="$event.stopPropagation()"
            [placeholder]="column.name"/>
+  </mat-form-field>
+</ng-template>
+
+<ng-template #filterTypeNumber
+             let-column='column'>
+  <mat-form-field
+    (click)="$event.stopPropagation()"
+    class="filter">
+    <input matInput
+           [formControl]="filterFormControl(column.key)"
+           (keydown)="$event.stopPropagation()"
+           (keyup)="$event.stopPropagation()"
+           (keypress)="$event.stopPropagation()"
+           [placeholder]="column.name"
+           type="number"
+           appInputRestriction="integer"/>
   </mat-form-field>
 </ng-template>
