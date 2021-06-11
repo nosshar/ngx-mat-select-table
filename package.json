@@ -11,7 +11,7 @@
     "test.ci": "npm run test -- --progress=false --watch=false",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build-lib": "ng-packagr -p ng-package.json"
+    "build-lib": "ng-packagr -p package.json"
   },
   "private": false,
   "peerDependencies": {
@@ -20,20 +20,19 @@
     "rxjs": "^5.5.2 || ^6.0.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "0.12.1",
+    "@angular-devkit/build-angular": "0.13.9",
     "@angular/cli": "7.1.4",
     "@angular/compiler-cli": "7.1.4",
     "@angular/language-service": "7.1.4",
     "@types/jasmine": "3.3.5",
     "@types/jasminewd2": "2.0.6",
-    "@types/node": "8.0.47",
+    "@types/node": "^14.0.5",
     "@angular/animations": "7.1.4",
     "@angular/cdk": "7.2.0",
     "@angular/common": "7.1.4",
     "@angular/compiler": "7.1.4",
     "@angular/core": "7.1.4",
     "@angular/forms": "7.1.4",
-    "@angular/http": "7.1.4",
     "@angular/material": "7.2.0",
     "@angular/platform-browser": "7.1.4",
     "@angular/platform-browser-dynamic": "7.1.4",
@@ -43,11 +42,10 @@
     "core-js": "2.6.1",
     "material-design-icons-iconfont": "^4.0.3",
     "rxjs": "^6.3.1",
-    "rxjs-compat": "^6.2.2",
     "web-animations-js": "2.3.1",
     "ngx-mat-select-search": "1.7.2",
     "classlist.js": "1.1.20150312",
-    "zone.js": "0.8.29",
+    "zone.js": "0.8.26",
     "codelyzer": "4.5.0",
     "jasmine-core": "3.3.0",
     "jasmine-spec-reporter": "4.2.1",
@@ -57,17 +55,15 @@
     "karma-coverage-istanbul-reporter": "2.0.4",
     "karma-jasmine": "2.0.1",
     "karma-jasmine-html-reporter": "1.4.0",
-    "node-sass": "4.12.0",
     "protractor": "5.4.2",
     "ts-node": "7.0.1",
     "tslint": "5.12.0",
-    "ng-packagr": "^4.4.5",
+    "ng-packagr": "5.5.1",
     "tsickle": "^0.34.0",
-    "typescript": "3.1.1",
-    "webpack": "^4.28.2"
+    "typescript": "3.1.1"
   },
   "description": "[https://github.com/nosshar/ngx-mat-select-table](https://github.com/nosshar/ngx-mat-select-table)",
-  "main": "karma.conf.js",
+  "main": "dist-lib/bundles/ngx-mat-select-table.umd.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nosshar/ngx-mat-select-table.git"
@@ -82,5 +78,12 @@
   "bugs": {
     "url": "https://github.com/nosshar/ngx-mat-select-table/issues"
   },
-  "homepage": "https://github.com/nosshar/ngx-mat-select-table#readme"
+  "homepage": "https://github.com/nosshar/ngx-mat-select-table#readme",
+  "$schema": "./node_modules/ng-packagr/package.schema.json",
+  "ngPackage": {
+    "dest": "dist-lib",
+    "lib": {
+      "entryFile": "src/app/mat-select-table/public_api.ts"
+    }
+  }
 }
