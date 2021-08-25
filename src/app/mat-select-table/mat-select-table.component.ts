@@ -18,7 +18,10 @@ import {
 } from '@angular/core';
 import {ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {merge, Subject} from 'rxjs';
-import {MatOption, MatSelect, MatSort, MatTable, MatTableDataSource, Sort, SortDirection} from '@angular/material';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatSort, Sort, SortDirection } from '@angular/material/sort';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 import {isArray, isNullOrUndefined, isNumber, isString} from 'util';
 import {MatSelectTableDataSource} from './MatSelectTableDataSource';
 import {MatSelectTableRow} from './MatSelectTableRow';

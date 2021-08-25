@@ -1,8 +1,8 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('@angular/forms'), require('rxjs'), require('@angular/material'), require('util'), require('@angular/cdk/coercion'), require('rxjs/operators'), require('ngx-mat-select-search'), require('@angular/common')) :
-    typeof define === 'function' && define.amd ? define('ngx-mat-select-table', ['exports', '@angular/core', '@angular/forms', 'rxjs', '@angular/material', 'util', '@angular/cdk/coercion', 'rxjs/operators', 'ngx-mat-select-search', '@angular/common'], factory) :
-    (global = global || self, factory(global['ngx-mat-select-table'] = {}, global.ng.core, global.ng.forms, global.rxjs, global.ng.material, global.util, global.ng.cdk.coercion, global.rxjs.operators, global.ngxMatSelectSearch, global.ng.common));
-}(this, (function (exports, core, forms, rxjs, material, util, coercion, operators, ngxMatSelectSearch, common) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('@angular/forms'), require('rxjs'), require('@angular/material/core'), require('@angular/material/select'), require('@angular/material/sort'), require('@angular/material/table'), require('util'), require('@angular/cdk/coercion'), require('rxjs/operators'), require('ngx-mat-select-search'), require('@angular/common'), require('@angular/material/icon'), require('@angular/material/input')) :
+    typeof define === 'function' && define.amd ? define('ngx-mat-select-table', ['exports', '@angular/core', '@angular/forms', 'rxjs', '@angular/material/core', '@angular/material/select', '@angular/material/sort', '@angular/material/table', 'util', '@angular/cdk/coercion', 'rxjs/operators', 'ngx-mat-select-search', '@angular/common', '@angular/material/icon', '@angular/material/input'], factory) :
+    (global = global || self, factory(global['ngx-mat-select-table'] = {}, global.ng.core, global.ng.forms, global.rxjs, global.ng.material.core, global.ng.material.select, global.ng.material.sort, global.ng.material.table, global.util, global.ng.cdk.coercion, global.rxjs.operators, global.ngxMatSelectSearch, global.ng.common, global.ng.material.icon, global.ng.material.input));
+}(this, (function (exports, core, forms, rxjs, core$1, select, sort, table, util, coercion, operators, ngxMatSelectSearch, common, icon, input) { 'use strict';
 
     /*! *****************************************************************************
     Copyright (c) Microsoft Corporation.
@@ -826,27 +826,27 @@
             __metadata("design:type", core.EventEmitter)
         ], MatSelectTableComponent.prototype, "close", void 0);
         __decorate([
-            core.ViewChild('componentSelect'),
-            __metadata("design:type", material.MatSelect)
+            core.ViewChild('componentSelect', { static: true }),
+            __metadata("design:type", select.MatSelect)
         ], MatSelectTableComponent.prototype, "matSelect", void 0);
         __decorate([
-            core.ViewChild(ngxMatSelectSearch.MatSelectSearchComponent),
+            core.ViewChild(ngxMatSelectSearch.MatSelectSearchComponent, { static: false }),
             __metadata("design:type", ngxMatSelectSearch.MatSelectSearchComponent)
         ], MatSelectTableComponent.prototype, "matSelectSearch", void 0);
         __decorate([
-            core.ViewChild(material.MatSort),
-            __metadata("design:type", material.MatSort)
+            core.ViewChild(sort.MatSort, { static: true }),
+            __metadata("design:type", sort.MatSort)
         ], MatSelectTableComponent.prototype, "sort", void 0);
         __decorate([
-            core.ViewChild(material.MatTable),
-            __metadata("design:type", material.MatTable)
+            core.ViewChild(table.MatTable, { static: true }),
+            __metadata("design:type", table.MatTable)
         ], MatSelectTableComponent.prototype, "table", void 0);
         __decorate([
-            core.ViewChild('table', { read: core.ElementRef }),
+            core.ViewChild('table', { read: core.ElementRef, static: true }),
             __metadata("design:type", core.ElementRef)
         ], MatSelectTableComponent.prototype, "tableRef", void 0);
         __decorate([
-            core.ViewChildren(material.MatOption),
+            core.ViewChildren(core$1.MatOption),
             __metadata("design:type", core.QueryList)
         ], MatSelectTableComponent.prototype, "matOptions", void 0);
         MatSelectTableComponent = MatSelectTableComponent_1 = __decorate([
@@ -862,7 +862,7 @@
                         multi: true
                     }
                 ],
-                styles: [":host{display:block}:host mat-form-field{width:100%}::ng-deep .mat-select-panel.mat-select-search-table-panel{overflow-x:auto!important}::ng-deep .mat-select-panel.mat-select-search-table-panel .overall-search-toggle{z-index:102;position:absolute;left:13px;top:17px;cursor:pointer}::ng-deep .mat-select-panel.mat-select-search-table-panel ngx-mat-select-search{position:absolute;z-index:101}::ng-deep .mat-select-panel.mat-select-search-table-panel ngx-mat-select-search.hidden{display:none}::ng-deep .mat-select-panel.mat-select-search-table-panel ngx-mat-select-search .mat-select-search-inner{height:56px}::ng-deep .mat-select-panel.mat-select-search-table-panel ngx-mat-select-search .mat-select-search-inner .mat-select-search-input{margin-left:26px;width:calc(100% - 26px)}::ng-deep .mat-select-panel.mat-select-search-table-panel table{width:100%}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr{cursor:pointer;height:48px;max-height:48px}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr mat-option{height:48px;max-height:48px}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr.active{background:rgba(0,0,0,.04)}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr td{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;border-bottom:0!important;box-shadow:inset 0 -1px 0 0 rgba(0,0,0,.12)}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr th ::ng-deep .mat-sort-header-container{height:55px}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr th ::ng-deep .mat-sort-header-container mat-form-field .mat-form-field-infix{width:initial}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr th[aria-sort] ::ng-deep .mat-sort-header-arrow{opacity:1!important}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr td mat-option,::ng-deep .mat-select-panel.mat-select-search-table-panel table tr th mat-option{background:0 0!important}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr td.selection,::ng-deep .mat-select-panel.mat-select-search-table-panel table tr th.selection{width:56px;padding:0;margin:0}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr td.selection.hidden mat-option,::ng-deep .mat-select-panel.mat-select-search-table-panel table tr th.selection.hidden mat-option{visibility:hidden}"]
+                styles: [":host{display:block}:host mat-form-field{width:100%}::ng-deep .mat-select-panel.mat-select-search-table-panel{overflow-x:auto!important}::ng-deep .mat-select-panel.mat-select-search-table-panel .overall-search-toggle{z-index:102;position:absolute;left:13px;top:17px;cursor:pointer}::ng-deep .mat-select-panel.mat-select-search-table-panel ngx-mat-select-search{position:absolute;z-index:101}::ng-deep .mat-select-panel.mat-select-search-table-panel ngx-mat-select-search.hidden{display:none}::ng-deep .mat-select-panel.mat-select-search-table-panel ngx-mat-select-search .mat-select-search-inner{height:56px}::ng-deep .mat-select-panel.mat-select-search-table-panel ngx-mat-select-search .mat-select-search-inner .mat-select-search-input{margin-left:26px;width:calc(100% - 26px)}::ng-deep .mat-select-panel.mat-select-search-table-panel table{width:100%}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr{cursor:pointer;height:48px;max-height:48px}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr mat-option{height:48px;max-height:48px}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr.active{background:rgba(0,0,0,.04)}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr td{-webkit-user-select:none;-moz-user-select:none;user-select:none;border-bottom:0!important;box-shadow:inset 0 -1px 0 0 rgba(0,0,0,.12)}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr th ::ng-deep .mat-sort-header-container{height:55px}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr th ::ng-deep .mat-sort-header-container mat-form-field .mat-form-field-infix{width:initial}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr th[aria-sort] ::ng-deep .mat-sort-header-arrow{opacity:1!important}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr td mat-option,::ng-deep .mat-select-panel.mat-select-search-table-panel table tr th mat-option{background:0 0!important}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr td.selection,::ng-deep .mat-select-panel.mat-select-search-table-panel table tr th.selection{width:56px;padding:0;margin:0}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr td.selection.hidden mat-option,::ng-deep .mat-select-panel.mat-select-search-table-panel table tr th.selection.hidden mat-option{visibility:hidden}"]
             }),
             __metadata("design:paramtypes", [core.ChangeDetectorRef])
         ], MatSelectTableComponent);
@@ -931,13 +931,13 @@
                     common.CommonModule,
                     forms.FormsModule,
                     forms.ReactiveFormsModule,
-                    material.MatSelectModule,
-                    material.MatSortModule,
-                    material.MatOptionModule,
-                    material.MatCommonModule,
-                    material.MatTableModule,
-                    material.MatInputModule,
-                    material.MatIconModule,
+                    select.MatSelectModule,
+                    sort.MatSortModule,
+                    core$1.MatOptionModule,
+                    core$1.MatCommonModule,
+                    table.MatTableModule,
+                    input.MatInputModule,
+                    icon.MatIconModule,
                     ngxMatSelectSearch.NgxMatSelectSearchModule
                 ],
                 providers: [],
