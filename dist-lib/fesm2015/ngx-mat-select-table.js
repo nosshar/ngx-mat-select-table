@@ -1,9 +1,8 @@
-import { __decorate, __metadata } from 'tslib';
-import { EventEmitter, ChangeDetectorRef, Input, Output, ViewChild, ElementRef, ViewChildren, QueryList, Component, ChangeDetectionStrategy, forwardRef, HostListener, Directive, NgModule } from '@angular/core';
+import { __decorate } from 'tslib';
+import { EventEmitter, ChangeDetectorRef, Input, Output, ViewChild, ElementRef, ViewChildren, Component, ChangeDetectionStrategy, forwardRef, HostListener, Directive, NgModule } from '@angular/core';
 import { FormGroup, FormControl, NG_VALUE_ACCESSOR, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, merge } from 'rxjs';
 import { MatOption, MatOptionModule, MatCommonModule } from '@angular/material/core';
-import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTable, MatTableModule } from '@angular/material/table';
 import { isNullOrUndefined, isArray, isString, isNumber } from 'util';
@@ -13,6 +12,7 @@ import { MatSelectSearchComponent, NgxMatSelectSearchModule } from 'ngx-mat-sele
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 var MatSelectTableComponent_1;
 const MAX_SAFE_INTEGER = 9007199254740991;
@@ -544,88 +544,67 @@ MatSelectTableComponent.ctorParameters = () => [
     { type: ChangeDetectorRef }
 ];
 __decorate([
-    Input(),
-    __metadata("design:type", Object)
+    Input()
 ], MatSelectTableComponent.prototype, "dataSource", void 0);
 __decorate([
-    Input(),
-    __metadata("design:type", Boolean)
+    Input()
 ], MatSelectTableComponent.prototype, "multiple", void 0);
 __decorate([
-    Input(),
-    __metadata("design:type", Boolean)
+    Input()
 ], MatSelectTableComponent.prototype, "overallSearchEnabled", void 0);
 __decorate([
-    Input(),
-    __metadata("design:type", Boolean)
+    Input()
 ], MatSelectTableComponent.prototype, "overallSearchVisible", void 0);
 __decorate([
-    Input(),
-    __metadata("design:type", Boolean)
+    Input()
 ], MatSelectTableComponent.prototype, "resetSortOnOpen", void 0);
 __decorate([
-    Input(),
-    __metadata("design:type", Boolean)
+    Input()
 ], MatSelectTableComponent.prototype, "resetFiltersOnOpen", void 0);
 __decorate([
-    Input(),
-    __metadata("design:type", Function)
+    Input()
 ], MatSelectTableComponent.prototype, "customTriggerLabelFn", void 0);
 __decorate([
-    Input(),
-    __metadata("design:type", Object)
+    Input()
 ], MatSelectTableComponent.prototype, "triggerLabelSort", void 0);
 __decorate([
-    Input(),
-    __metadata("design:type", String)
+    Input()
 ], MatSelectTableComponent.prototype, "customTriggerLabelTemplate", void 0);
 __decorate([
-    Input(),
-    __metadata("design:type", String)
+    Input()
 ], MatSelectTableComponent.prototype, "labelForNullValue", void 0);
 __decorate([
-    Input(),
-    __metadata("design:type", Object)
+    Input()
 ], MatSelectTableComponent.prototype, "matSelectConfigurator", void 0);
 __decorate([
-    Input(),
-    __metadata("design:type", Object)
+    Input()
 ], MatSelectTableComponent.prototype, "matSelectSearchConfigurator", void 0);
 __decorate([
-    Input(),
-    __metadata("design:type", Object)
+    Input()
 ], MatSelectTableComponent.prototype, "defaultSort", void 0);
 __decorate([
-    Input(),
-    __metadata("design:type", Function)
+    Input()
 ], MatSelectTableComponent.prototype, "resetOptionAction", void 0);
 __decorate([
-    Output(),
-    __metadata("design:type", EventEmitter)
+    Output()
 ], MatSelectTableComponent.prototype, "close", void 0);
 __decorate([
-    ViewChild('componentSelect', { static: true }),
-    __metadata("design:type", MatSelect)
+    ViewChild('componentSelect', { static: true })
 ], MatSelectTableComponent.prototype, "matSelect", void 0);
 __decorate([
-    ViewChild(MatSelectSearchComponent, { static: false }),
-    __metadata("design:type", MatSelectSearchComponent)
+    ViewChild(MatSelectSearchComponent, { static: false })
 ], MatSelectTableComponent.prototype, "matSelectSearch", void 0);
 __decorate([
-    ViewChild(MatSort, { static: true }),
-    __metadata("design:type", MatSort)
+    ViewChild(MatSort, { static: true })
 ], MatSelectTableComponent.prototype, "sort", void 0);
 __decorate([
-    ViewChild(MatTable, { static: true }),
-    __metadata("design:type", MatTable)
+    ViewChild(MatTable, { static: true })
 ], MatSelectTableComponent.prototype, "table", void 0);
 __decorate([
-    ViewChild('table', { read: ElementRef, static: true }),
-    __metadata("design:type", ElementRef)
+    ViewChild('table', { read: ElementRef, static: true })
 ], MatSelectTableComponent.prototype, "tableRef", void 0);
 __decorate([
-    ViewChildren(MatOption),
-    __metadata("design:type", QueryList)
+    ViewChildren(MatOption)
 ], MatSelectTableComponent.prototype, "matOptions", void 0);
 MatSelectTableComponent = MatSelectTableComponent_1 = __decorate([
     Component({
@@ -641,8 +620,7 @@ MatSelectTableComponent = MatSelectTableComponent_1 = __decorate([
             }
         ],
         styles: [":host{display:block}:host mat-form-field{width:100%}::ng-deep .mat-select-panel.mat-select-search-table-panel{overflow-x:auto!important}::ng-deep .mat-select-panel.mat-select-search-table-panel .overall-search-toggle{z-index:102;position:absolute;left:13px;top:17px;cursor:pointer}::ng-deep .mat-select-panel.mat-select-search-table-panel ngx-mat-select-search{position:absolute;z-index:101}::ng-deep .mat-select-panel.mat-select-search-table-panel ngx-mat-select-search.hidden{display:none}::ng-deep .mat-select-panel.mat-select-search-table-panel ngx-mat-select-search .mat-select-search-inner{height:56px}::ng-deep .mat-select-panel.mat-select-search-table-panel ngx-mat-select-search .mat-select-search-inner .mat-select-search-input{margin-left:26px;width:calc(100% - 26px)}::ng-deep .mat-select-panel.mat-select-search-table-panel table{width:100%}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr{cursor:pointer;height:48px;max-height:48px}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr mat-option{height:48px;max-height:48px}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr.active{background:rgba(0,0,0,.04)}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr td{-webkit-user-select:none;-moz-user-select:none;user-select:none;border-bottom:0!important;box-shadow:inset 0 -1px 0 0 rgba(0,0,0,.12)}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr th ::ng-deep .mat-sort-header-container{height:55px}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr th ::ng-deep .mat-sort-header-container mat-form-field .mat-form-field-infix{width:initial}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr th[aria-sort] ::ng-deep .mat-sort-header-arrow{opacity:1!important}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr td mat-option,::ng-deep .mat-select-panel.mat-select-search-table-panel table tr th mat-option{background:0 0!important}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr td.selection,::ng-deep .mat-select-panel.mat-select-search-table-panel table tr th.selection{width:56px;padding:0;margin:0}::ng-deep .mat-select-panel.mat-select-search-table-panel table tr td.selection.hidden mat-option,::ng-deep .mat-select-panel.mat-select-search-table-panel table tr th.selection.hidden mat-option{visibility:hidden}"]
-    }),
-    __metadata("design:paramtypes", [ChangeDetectorRef])
+    })
 ], MatSelectTableComponent);
 
 let MatSelectTableInputRestrictionDirective = class MatSelectTableInputRestrictionDirective {
@@ -670,20 +648,13 @@ let MatSelectTableInputRestrictionDirective = class MatSelectTableInputRestricti
     }
 };
 __decorate([
-    Input(),
-    __metadata("design:type", String)
+    Input()
 ], MatSelectTableInputRestrictionDirective.prototype, "appInputRestriction", void 0);
 __decorate([
-    HostListener('keypress', ['$event']),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
+    HostListener('keypress', ['$event'])
 ], MatSelectTableInputRestrictionDirective.prototype, "onKeyPress", null);
 __decorate([
-    HostListener('paste', ['$event']),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
+    HostListener('paste', ['$event'])
 ], MatSelectTableInputRestrictionDirective.prototype, "onPaste", null);
 MatSelectTableInputRestrictionDirective = __decorate([
     Directive({
