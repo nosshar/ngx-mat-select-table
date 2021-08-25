@@ -112,15 +112,15 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
 
   @Output() close: EventEmitter<boolean> = new EventEmitter();
 
-  @ViewChild('componentSelect') private matSelect: MatSelect;
+  @ViewChild('componentSelect', { static: true }) private matSelect: MatSelect;
 
-  @ViewChild(MatSelectSearchComponent) private matSelectSearch: MatSelectSearchComponent;
+  @ViewChild(MatSelectSearchComponent, { static: false }) private matSelectSearch: MatSelectSearchComponent;
 
-  @ViewChild(MatSort) private sort: MatSort;
+  @ViewChild(MatSort, { static: true }) private sort: MatSort;
 
-  @ViewChild(MatTable) private table: MatTable<MatSelectTableRow>;
+  @ViewChild(MatTable, { static: true }) private table: MatTable<MatSelectTableRow>;
 
-  @ViewChild('table', {read: ElementRef}) private tableRef: ElementRef;
+  @ViewChild('table', { read: ElementRef, static: true }) private tableRef: ElementRef;
 
   @ViewChildren(MatOption) private matOptions: QueryList<MatOption>;
 
