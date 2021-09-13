@@ -3,7 +3,6 @@ import {FormControl} from '@angular/forms';
 import {MatSelectTableDataSource} from './mat-select-table/MatSelectTableDataSource';
 import {MatSelectTableRow} from './mat-select-table/MatSelectTableRow';
 import {BehaviorSubject} from 'rxjs';
-import {SortDirection} from '@angular/material';
 
 interface DataRow extends MatSelectTableRow {
   name: string;

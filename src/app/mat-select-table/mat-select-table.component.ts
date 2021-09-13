@@ -18,7 +18,10 @@ import {
 } from '@angular/core';
 import {ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {merge, Subject} from 'rxjs';
-import {MatOption, MatSelect, MatSort, MatTable, MatTableDataSource, Sort, SortDirection} from '@angular/material';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
+import { MatSort, Sort, SortDirection } from '@angular/material/sort';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 import {isArray, isNullOrUndefined, isNumber, isString} from 'util';
 import {MatSelectTableDataSource} from './MatSelectTableDataSource';
 import {MatSelectTableRow} from './MatSelectTableRow';
@@ -112,15 +115,15 @@ export class MatSelectTableComponent implements ControlValueAccessor, OnInit, Af
 
   @Output() close: EventEmitter<boolean> = new EventEmitter();
 
-  @ViewChild('componentSelect') private matSelect: MatSelect;
+  @ViewChild('componentSelect', { static: true }) private matSelect: MatSelect;
 
-  @ViewChild(MatSelectSearchComponent) private matSelectSearch: MatSelectSearchComponent;
+  @ViewChild(MatSelectSearchComponent, { static: false }) private matSelectSearch: MatSelectSearchComponent;
 
-  @ViewChild(MatSort) private sort: MatSort;
+  @ViewChild(MatSort, { static: true }) private sort: MatSort;
 
-  @ViewChild(MatTable) private table: MatTable<MatSelectTableRow>;
+  @ViewChild(MatTable, { static: true }) private table: MatTable<MatSelectTableRow>;
 
-  @ViewChild('table', {read: ElementRef}) private tableRef: ElementRef;
+  @ViewChild('table', { read: ElementRef, static: true }) private tableRef: ElementRef;
 
   @ViewChildren(MatOption) private matOptions: QueryList<MatOption>;
 

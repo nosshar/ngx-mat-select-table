@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, EventEmitter, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { ControlValueAccessor, FormControl } from '@angular/forms';
-import { Sort } from '@angular/material';
+import { Sort } from '@angular/material/sort';
 import { MatSelectTableDataSource } from './MatSelectTableDataSource';
 import { MatSelectTableRow } from './MatSelectTableRow';
 import { MatSelectTableColumn } from './MatSelectTableColumn';
